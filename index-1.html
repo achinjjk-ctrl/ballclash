@@ -883,7 +883,7 @@ const FREE=['kira','subaru','glut','ell','zen'], PRICE={rimuru:100,jin:80,dio:10
 let coins=0, unlocked=FREE.slice(), lastReward=0, lastW=0, redeemed=[], gems=0, bossWon=[], lastGem=0, lastGemFirst=false, lastItem='';
 const CODES={'2ewsozg64j0':{items:[{id:'it_tojihair',n:5},{id:'it_soulsword',n:1},{id:'it_soulworm',n:4}]},'1gq4z52oc55':1000000,'24zgmdixxtm':{coins:20000,gems:100},'nhdaxhyhtx':{coins:0,gems:1000}};
 const GEMS={redwan:{n:5,first:10},sukuna:{n:2,first:5},kokushibo:{n:5,first:20},mahoraga:{n:5,first:10},aizen:{n:20,first:50}};
-const CSK=[{id:'gluttony',char:'subaru',who:'สุบารุ',name:'บาปแห่งความตะกละ',price:20000},{id:'greed',char:'subaru',who:'สุบารุ',name:'บาปแห่งความโลภ',price:10000},{id:'sun',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'ระบำเทพสุริยัน',price:15000},{id:'king',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'การตื่นขึ้นของราชันย์อสูร',price:350,cur:'gem'},{id:'shadow',char:'jin',who:'ซองจินอู',name:'จักรพรรดิเงา',price:10000},{id:'mugen',char:'gojo',who:'โกโจ ซาโตรุ',name:'อัจฉริยะไสยเวทย์',price:20000}];
+const CSK=[{id:'gluttony',char:'subaru',who:'สุบารุ',name:'บาปแห่งความตะกละ',price:20000},{id:'greed',char:'subaru',who:'สุบารุ',name:'บาปแห่งความโลภ',price:10000},{id:'sun',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'ระบำเทพสุริยัน',price:15000},{id:'king',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'การตื่นขึ้นของราชันย์อสูร',price:350,cur:'gem'},{id:'shadow',char:'jin',who:'ซองจินอู',name:'จักรพรรดิเงา',price:10000},{id:'mugen',char:'gojo',who:'โกโจ ซาโตรุ',name:'อัจฉริยะไสยเวทย์',price:20000},{id:'thunder',char:'zen',who:'เซน อิทซึ',name:'สุดยอดปรานอัสนี',price:15000}];
 let cskOwned=[], skinSel={};
 let profile={name:'ผู้เล่น',title:'',avatar:'',show:[null,null,null],fav:''}, bag=[], mystOwned=[];
 try{const sv=JSON.parse(localStorage.getItem('ballclash.save')||'null'); if(sv){const pf=sv.profile||{}; profile={name:String(pf.name||'ผู้เล่น').slice(0,16),title:String(pf.title||'').slice(0,24),avatar:typeof pf.avatar==='string'&&pf.avatar.indexOf('data:image/')===0?pf.avatar:'',show:[0,1,2].map(i=>pf.show&&pf.show[i]&&typeof pf.show[i].k==='string'?{k:pf.show[i].k,s:pf.show[i].s||''}:null),fav:String(pf.fav||'')}; mystOwned=Array.isArray(sv.myst)?sv.myst.filter(x=>typeof x==='string'):[]; bag=Array.isArray(sv.bag)?sv.bag.filter(x=>x&&typeof x.id==='string').map(x=>({id:x.id,n:Math.max(1,x.n|0)})):[]; coins=Math.max(0,sv.coins|0); gems=Math.max(0,sv.gems|0); bossWon=(sv.bossWon||[]).filter(k=>GEMS[k]); unlocked=FREE.concat((sv.unlocked||[]).filter(k=>PRICE[k]||k==='toji')); redeemed=(sv.redeemed||[]).filter(h=>CODES[h]); ownedSkins=['default'].concat((sv.skins||[]).filter(id=>SKINS.some(k=>k.id===id&&k.price>0))); skinOn=ownedSkins.includes(sv.skin)?sv.skin:'default'; cskOwned=(sv.cskins||[]).filter(id=>CSK.some(k=>k.id===id)); if(sv.skinSel){for(const c in sv.skinSel){const id=sv.skinSel[c], kk=CSK.find(x=>x.id===id); if(kk&&kk.char===c&&cskOwned.includes(id))skinSel[c]=id}}else if(cskOwned.includes(sv.cskOn))skinSel.subaru=sv.cskOn}}catch(e){}
@@ -940,6 +940,8 @@ function hurt(t,amt,src,noFx,rg){
   if(!t.alive||t.inv>0||t.bar>0)return;
   if(src&&src!==t&&src.air>0)return;
   if(src&&src.skin==='mugen'&&src.bar>0)amt*=0.5;
+  if(t.tk&&t.tk.brT>0)amt*=0.5;
+  if(src&&src.skin==='thunder'&&src.type==='zen'&&src!==t&&amt>0&&!(t.tk&&t.tk.brT>0))t.thd={t:3,c:1};
   if(t.type==='redwan'&&src&&src!==t&&['tanjiro','sha','toji','zen'].includes(src.type))return;
   if(t.type==='toji'&&t.tj&&t.tj.dodge&&amt>0&&src){t.tj.dodge=false; texts.push({x:t.x,y:t.y-t.r-12,t:0.8,txt:'หลบ!',col:'#9fd0ff'}); return}
   if(t.helper&&tea&&tea.t>0)return;
@@ -2099,6 +2101,7 @@ function step(dt){
       if(wl||k.t<=0){b.kb=null; b.vx=0; b.vy=0; b.stun=k.s||2; ring(b.x,b.y,b.r,b.r*3,0.45,'255,255,255'); shake(0.3,5); texts.push({x:b.x,y:b.y-b.r-16,t:1,txt:'สตั้น!',col:'#e6c8ff'})}
       continue;
     }
+    if(b.type==='zen'&&b.skin==='thunder'&&b.tk&&b.tk.brT>0){for(const k in THCLR)b[k]=THCLR[k]; b.vx=0; b.vy=0}
     if(b.pin>0){
       if(b.pin<90)b.pin-=dt; b.vx=0; b.vy=0; b.pull=0; b.pulledBy=null;
       zoneDmg(b,dt);
@@ -2239,7 +2242,7 @@ function step(dt){
     }
     if(b.type==='tanjiro'){if(b.skin==='sun')sunStep(b,dt);else if(b.skin==='king')kingStep(b,dt);else tanjiroStep(b,dt)}
     if(b.type==='toji')tojiStep(b,dt);
-    if(b.type==='zen')zenStep(b,dt);
+    if(b.type==='zen'){if(b.skin==='thunder')thStep(b,dt); else zenStep(b,dt);}
     if(b.type==='shura')shuraStep(b,dt);
     if(b.type==='rimuru')rimStep(b,dt);
     if(b.type==='subaru'&&b.skin==='gluttony')gluttonyStep(b,dt);
@@ -2478,7 +2481,7 @@ function step(dt){
     }
     soldiers=soldiers.filter(q=>q.life>0);
   }
-  if(!ts){bossWorld(dt); naoyaWorld(dt); tanjiroWorld(dt); sunWorld(dt); kingWorld(dt); skinWorld(dt); redWorld(dt); rimWorld(dt); gjWorld(dt)}
+  if(!ts){bossWorld(dt); naoyaWorld(dt); tanjiroWorld(dt); sunWorld(dt); kingWorld(dt); skinWorld(dt); redWorld(dt); rimWorld(dt); gjWorld(dt); thWorld(dt)}
   if(domain&&!ts){
     domain.t-=dt; const o=domain.owner;
     if(domain.t<=0||!o.alive){domain=null;for(const e of balls)e.stun=0}
@@ -2650,6 +2653,7 @@ function applySkinTo(b){
   if(mine&&b.type==='tanjiro'&&skinSel.tanjiro==='sun'){b.skin='sun'; b.max*=2; b.hp=b.max; b.atk*=2; b.sun=null; b.still=0; b.sdash=null; return}
   if(mine&&b.type==='tanjiro'&&skinSel.tanjiro==='king'){b.skin='king'; b.kpas=true; b.kg=null; b.kgd=0; return}
   if(mine&&b.type==='jin'&&skinSel.jin==='shadow'){b.skin='shadow'; b.cd=10; b.beru=null; b.ig=null; return}
+  if(mine&&b.type==='zen'&&skinSel.zen==='thunder'){b.skin='thunder'; b.spd*=2.5; b.tk={now:0,s1:5,s2:11,br:7,brT:0,trail:[],lcd:new Map(),sq:null}; return}
   if(mine&&b.type==='gojo'&&skinSel.gojo==='mugen'){b.skin='mugen'; b.gjc={ak:10,ao:8,mu:20,rc:20}; return}
   if(mine&&b.type==='subaru'&&skinSel.subaru==='gluttony'){
     b.skin='gluttony'; b.max=60; b.hp=60; b.atk=0; b.gl={add:0,b5:0,t:0,bc:0,bk:false,cp:false};
@@ -2747,6 +2751,7 @@ function showOverlay(t){const o=$('overlay');o.textContent=t;o.style.display='fl
 function hideOverlay(){$('overlay').style.display='none'}
 function iconHTML(k){
   const t=TYPES[k];
+  if(k==='zen'&&skinSel.zen==='thunder')return '<img class="av" alt="" src="assets/zen_sk_face.webp">';
   if(t.img)return '<img class="av" alt="" src="'+(k==='glut'?IMGS.glut[0]:(k==='subaru'&&skinSel.subaru==='greed'?IMGS.sinsub:k==='subaru'&&skinSel.subaru==='gluttony'?IMGS.sgl:(k==='jin'&&skinSel.jin==='shadow'?IMGS.sjin:(k==='tanjiro'&&skinSel.tanjiro==='sun'?IMGS.sun:(k==='tanjiro'&&skinSel.tanjiro==='king'?IMGS.king:IMGS[k])))))+'">';
   return t.icon;
 }
@@ -2933,7 +2938,7 @@ function face(b){
   const d=TYPES[b.type];
   if(b.type==='toji'&&!b.mini){const v=tjVid(); if(v.readyState>=2&&v.videoWidth){ctx.save(); ctx.beginPath(); ctx.arc(b.x,b.y,b.r-4,0,6.283); ctx.clip(); ctx.drawImage(v,b.x-b.r+4,b.y-b.r+4,(b.r-4)*2,(b.r-4)*2); ctx.restore(); return}}
   if(d.img&&!b.mini){
-    const im=d.img==='glut'?IM.glut[Math.floor(animT*8)%IM.glut.length]:((b.type==='gojo'&&domain&&domain.owner===b&&domain.t>0)?IM.gojo2:(b.skin==='mugen'&&b.type==='gojo')?IM.mugface:IM[(b.skin==='greed'&&b.type==='subaru')?'sinsub':(b.skin==='gluttony'&&b.type==='subaru')?'sgl':(b.skin==='shadow'&&b.type==='jin'?'sjin':(b.skin==='sun'&&b.type==='tanjiro'?'sun':(b.skin==='king'&&b.type==='tanjiro'?'king':d.img)))]);
+    const im=d.img==='glut'?IM.glut[Math.floor(animT*8)%IM.glut.length]:((b.type==='gojo'&&domain&&domain.owner===b&&domain.t>0)?IM.gojo2:(b.skin==='mugen'&&b.type==='gojo')?IM.mugface:(b.skin==='thunder'&&b.type==='zen')?IM.zenSk:IM[(b.skin==='greed'&&b.type==='subaru')?'sinsub':(b.skin==='gluttony'&&b.type==='subaru')?'sgl':(b.skin==='shadow'&&b.type==='jin'?'sjin':(b.skin==='sun'&&b.type==='tanjiro'?'sun':(b.skin==='king'&&b.type==='tanjiro'?'king':d.img)))]);
     const rr=b.r-4;
     if(im&&im.complete&&im.naturalWidth){
       ctx.save(); ctx.beginPath(); ctx.arc(b.x,b.y,rr,0,6.283); ctx.clip();
@@ -3146,6 +3151,120 @@ function drawAuras(){
 const GJ_IM={}; for(const [k,src] of [['akaga','assets/gj_akaga.webp'],['ao','assets/gj_ao.webp'],['mura','assets/gj_murasaki.webp'],['eyes','assets/mugen_eyes.webp']]){const i=new Image(); i.src=src; GJ_IM[k]=i}
 IM.mugface=new Image(); IM.mugface.src='assets/gojo_mugface.webp';
 let gjOrbs=[];
+IM.zenSk=new Image(); IM.zenSk.src='assets/zen_sk_face.webp';
+/* ================= เซน อิทซึ: สุดยอดปรานอัสนี ================= */
+let thFxList=[];
+function thNearest(b){
+  let best=null,bd=1e9;
+  for(const e of balls){ if(!e.alive||e.team===b.team||e.shadow)continue; const d=Math.hypot(e.x-b.x,e.y-b.y); if(d<bd){bd=d;best=e} }
+  return best;
+}
+function thStun(e,d){ if(!(e.tk&&e.tk.brT>0)) e.stun=Math.max(e.stun||0,d) }
+function thSegHit(x1,y1,x2,y2,e,pad){
+  const dx=x2-x1,dy=y2-y1,L=dx*dx+dy*dy||1;
+  let t=((e.x-x1)*dx+(e.y-y1)*dy)/L; t=Math.max(0,Math.min(1,t));
+  return Math.hypot(e.x-(x1+dx*t),e.y-(y1+dy*t))<e.r+pad;
+}
+function thSkill1(b,tg){
+  const dx=tg.x-b.x,dy=tg.y-b.y,d=Math.hypot(dx,dy)||1,ux=dx/d,uy=dy/d;
+  const far=2000, x2=b.x+ux*far, y2=b.y+uy*far;
+  thFxList.push({k:'seg',x1:b.x,y1:b.y,x2:b.x+ux*d*3,y2:b.y+uy*d*3,t:0.22,T:0.22});
+  for(const e of balls){
+    if(!e.alive||e.team===b.team||e.shadow)continue;
+    if(thSegHit(b.x,b.y,x2,y2,e,7)){ hurt(e,4,b,true); if(e===tg) thStun(e,1); }
+  }
+  sfx('hit');
+}
+function thPass(b,tg,i){
+  const dx=tg.x-b.x,dy=tg.y-b.y,d=Math.hypot(dx,dy)||1,ux=dx/d,uy=dy/d;
+  const ax=tg.x-ux*170, ay=tg.y-uy*170, bx=tg.x+ux*170, by=tg.y+uy*170;
+  const sx=i%2===0?ax:bx, sy=i%2===0?ay:by, ex=i%2===0?bx:ax, ey=i%2===0?by:ay;
+  thFxList.push({k:'seg',x1:sx,y1:sy,x2:ex,y2:ey,t:0.12,T:0.12});
+  for(const e of balls){
+    if(!e.alive||e.team===b.team||e.shadow)continue;
+    if(thSegHit(sx,sy,ex,ey,e,8)){ hurt(e,1,b,true); if(e===tg) thStun(e,1); }
+  }
+}
+const THCLR={stun:0,slow:0,sbn:0,poison:0,fear:0,burn:0,burnT:0,prey:0,heavy:0,bind:false,pin:0,thd:null,pull:0,pulledBy:null,chain:null};
+function thStep(b,dt){
+  const T=b.tk; if(!T)return;
+  T.now+=dt;
+  /* พักหายใจ: ทุก 7 วิ นิ่ง 3 วิ ฟื้น 3 HP/วิ ต้านสถานะทั้งหมดจากระบบอื่น */
+  T.br-=dt;
+  if(T.br<=0){T.br=7; T.brT=3; ring(b.x,b.y,b.r,b.r*3,0.5,'255,210,63'); texts.push({x:b.x,y:b.y-b.r-14,t:1.2,txt:'พักหายใจ',col:'#ffd23f'})}
+  if(T.brT>0){
+    T.brT-=dt; b.vx=0; b.vy=0;
+    b.hp=Math.min(b.max,b.hp+3*dt);
+    for(const k in THCLR)b[k]=THCLR[k];
+    if(T.brT<=0) texts.push({x:b.x,y:b.y-b.r-14,t:1,txt:'พร้อมแล้ว!',col:'#ffd23f'});
+  }
+  /* เอฟเฟคสายฟ้าตามหลัง: ดาเมจ 3 ต่อบอลศัตรูต่อ 1 วิ */
+  T.trail.push({x:b.x,y:b.y,t:0.3});
+  for(const q of T.trail)q.t-=dt;
+  T.trail=T.trail.filter(q=>q.t>0);
+  if(T.trail.length>1){
+    for(const e of balls){
+      if(!e.alive||e.team===b.team||e.shadow)continue;
+      if(T.now-(T.lcd.get(e)??-9)<1)continue;
+      let hit=false;
+      for(let i=1;i<T.trail.length&&!hit;i++){const p=T.trail[i-1],q=T.trail[i]; if(thSegHit(p.x,p.y,q.x,q.y,e,6))hit=true}
+      if(hit){T.lcd.set(e,T.now); hurt(e,3,b,true)}
+    }
+  }
+  /* กระบวนท่าที่ 1: ทุก 5 วิ */
+  T.s1-=dt;
+  if(T.s1<=0){const tg=thNearest(b); if(tg){T.s1=5; thSkill1(b,tg)}}
+  /* กระบวนท่าที่ 7: ทุก 11 วิ พุ่งไปมา 7 รอบ */
+  if(T.sq){
+    T.sq.t-=dt;
+    if(T.sq.t<=0){
+      const tg=T.sq.tg;
+      if(T.sq.i<7&&tg.alive){thPass(b,tg,T.sq.i); T.sq.i++; T.sq.t=0.15}
+      else T.sq=null;
+    }
+  }
+  T.s2-=dt;
+  if(T.s2<=0&&!T.sq){const tg=thNearest(b); if(tg){T.s2=11; T.sq={tg,i:0,t:0}}}
+}
+function thWorld(dt){
+  thTick(dt);
+  for(const b of balls){
+    if(!b.alive||!b.thd)continue;
+    const D=b.thd; D.t-=dt; D.c-=dt;
+    if(D.c<=0){D.c+=1; hurt(b,1,null,true)}
+    if(D.t<=0||!b.alive)b.thd=null;
+  }
+}
+function drawThunderFX(){
+  for(const b of balls){
+    if(!b.alive||!b.thd)continue;
+    ctx.save(); ctx.strokeStyle='rgba(255,230,90,'+(0.5+0.4*Math.sin(animT*20))+')'; ctx.lineWidth=2; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.arc(b.x,b.y,b.r+3,0,6.283); ctx.stroke(); ctx.restore();
+  }
+  for(const b of balls){
+    if(!b.alive||b.type!=='zen'||!b.tk)continue;
+    const P=b.tk.trail; if(P.length<2)continue;
+    ctx.save(); ctx.lineCap='round'; ctx.lineJoin='round';
+    for(let pass=0;pass<2;pass++){
+      ctx.beginPath();
+      for(let i=0;i<P.length;i++){
+        const q=P[i], j=(Math.sin(animT*30+i*2.3)*4)*(pass?0.6:1);
+        i?ctx.lineTo(q.x+j,q.y-j):ctx.moveTo(q.x+j,q.y-j);
+      }
+      ctx.strokeStyle=pass?'#fff8c8':'rgba(255,215,60,.55)'; ctx.lineWidth=pass?1.6:6; ctx.stroke();
+    }
+    ctx.restore();
+  }
+  for(const q of thFxList){
+    const a=Math.max(0,q.t/q.T);
+    ctx.save(); ctx.globalAlpha=a; ctx.lineCap='round';
+    ctx.strokeStyle='rgba(255,220,90,.55)'; ctx.lineWidth=12; ctx.beginPath(); ctx.moveTo(q.x1,q.y1); ctx.lineTo(q.x2,q.y2); ctx.stroke();
+    ctx.strokeStyle='#fff8c8'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(q.x1,q.y1); ctx.lineTo(q.x2,q.y2); ctx.stroke();
+    ctx.restore();
+  }
+}
+function thTick(dt){ for(const q of thFxList)q.t-=dt; thFxList=thFxList.filter(q=>q.t>0) }
+
 function gjTarget(b){
   const en=balls.filter(e=>e.alive&&e.team!==b.team&&!e.shadow);
   if(!en.length)return null;
@@ -3247,7 +3366,7 @@ function drawGjFX(){
     ctx.restore();
   }
 }
-function drawBossFX(){ drawGjFX(); drawZenFX(); drawGluttonyFX(); drawRedFX(); drawRimFX();
+function drawBossFX(){ drawThunderFX(); drawGjFX(); drawZenFX(); drawGluttonyFX(); drawRedFX(); drawRimFX();
   drawTojiFX();
   drawTanjiroFX();
   drawSunFX();
@@ -3559,10 +3678,20 @@ const shopPage=$('shopPage'), shopList=$('shopList');
 const shopV=document.createElement('video');
 const shopV5=document.createElement('video'); shopV5.muted=true; shopV5.loop=true; shopV5.playsInline=true; shopV5.setAttribute('playsinline',''); shopV5.setAttribute('muted',''); shopV5.poster='assets/gl_poster.webp';
 const shopV6=document.createElement('video'); shopV6.muted=true; shopV6.loop=true; shopV6.playsInline=true; shopV6.setAttribute('playsinline',''); shopV6.setAttribute('muted',''); shopV6.poster='assets/gojo_poster.webp';
+const shopV7=document.createElement('video'); shopV7.muted=true; shopV7.loop=true; shopV7.playsInline=true; shopV7.setAttribute('playsinline',''); shopV7.setAttribute('muted',''); shopV7.poster='assets/zen_sk_poster.webp';
 const shopV3=document.createElement('video'); shopV3.muted=true; shopV3.loop=true; shopV3.playsInline=true; shopV3.setAttribute('playsinline',''); shopV3.setAttribute('muted',''); shopV3.poster=SUN_POSTER;
 const shopV4=document.createElement('video'); shopV4.muted=true; shopV4.loop=true; shopV4.playsInline=true; shopV4.setAttribute('playsinline',''); shopV4.setAttribute('muted',''); shopV4.poster=KING_POSTER;
 shopV.muted=true; shopV.loop=true; shopV.playsInline=true; shopV.setAttribute('playsinline',''); shopV.setAttribute('muted',''); shopV.poster=TEA_POSTER;
-const SK_INFO={mugen:{
+const SK_INFO={thunder:{
+  pv:['assets/zen_sk_face.webp'],
+  chips:['HP 50 (เท่าเดิม)','ดาเมจชน 4 (เท่าเดิม)'],
+  passive:'<b>พาสซีฟ:</b> เคลื่อนที่เร็วขึ้น x2.5 และทิ้งเอฟเฟคสายฟ้าตามหลังทุกครั้งที่เคลื่อนที่ เอฟเฟคนี้สร้างดาเมจ 3 ให้บอลศัตรูที่โดน (คูลดาวน์ 1 วิต่อบอลต่อการโดน 1 ครั้ง)',
+  list:[
+    '<b>สถานะสายฟ้า:</b> ดาเมจทุกครั้งที่เซนทำให้ศัตรูติดสถานะสายฟ้า ทำดาเมจ 1 ต่อวินาที นาน 3 วิ ไม่ซ้อนทับและไม่สะสม (ยิ่งโดนซ้ำจะรีเซ็ตเวลา)',
+    '<b>ทุก 5 วิ กระบวนท่าที่ 1:</b> พุ่งทะลุบอลศัตรูทั้งหมดในแนวเส้นตรง ดาเมจ 4 และทำให้เป้าหมายที่เซนเลือกสตั้น 1 วิ (สตั้นติดแค่เป้าหมายเดียว)',
+    '<b>ทุก 11 วิ กระบวนท่าที่ 7:</b> เลือกเป้าหมาย 1 เป้า พุ่งทะลุไปมาต่อเนื่อง 7 รอบ รอบละ 1 ดาเมจ (รวม 7) และสตั้นเป้าหมายที่เลือกทุกรอบ บอลอื่นที่โดนได้ดาเมจแต่ไม่สตั้น',
+    '<b>พักหายใจ:</b> ทุก 7 วิ เซนนิ่ง 3 วิ ฟื้นฟู HP วินาทีละ 3 ลดดาเมจที่ได้รับ 50% และต้านสถานะผิดปกติทั้งหมดจากระบบอื่นของเกมระหว่างพัก'
+  ]},mugen:{
   pv:['assets/gojo_mugface.webp'],
   chips:['HP 60 (เท่าเดิม)','ดาเมจ 5 (เท่าเดิม)'],
   passive:'<b>พาสซีฟ Mugen:</b> เหมือนพาสซีฟเดิมของโกโจ 30 วิแรกมีวงขาวกันทุกดาเมจและไม่ให้ศัตรูเข้าใกล้ · <b>Playful:</b> ระหว่าง Mugen โกโจทำดาเมจลดลง 50%',
@@ -3669,12 +3798,12 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&shopPage.classList.
 /* ---------- skin page: anime -> character -> skins ---------- */
 const ANIME=[
   {id:'rz',name:'Re:Zero',logo:'assets/logo_rz.webp',chars:['subaru']},
-  {id:'ds',name:'Demon Slayer',logo:'assets/logo_ds.webp',chars:['tanjiro']},
+  {id:'ds',name:'Demon Slayer',logo:'assets/logo_ds.webp',chars:['tanjiro','zen']},
   {id:'sl',name:'Solo Leveling',logo:'assets/logo_sl.webp',chars:['jin']},
   {id:'jjk',name:'Jujutsu Kaisen',logo:'assets/logo_jjk.webp',chars:['gojo']}];
 let skNav={a:null,c:null};
 const skinPage=$('skinPage'), skinBody=$('skinBody');
-const SKV={greed:shopV,shadow:shopV2,sun:shopV3,king:shopV4,gluttony:shopV5,mugen:shopV6};
+const SKV={greed:shopV,shadow:shopV2,sun:shopV3,king:shopV4,gluttony:shopV5,mugen:shopV6,thunder:shopV7};
 function renderSkinPage(){
   $('skinBack').textContent=(skNav.a||skNav.c)?'‹ ย้อนกลับ':'‹ กลับ';
   let h='';
@@ -3696,7 +3825,7 @@ function renderSkinPage(){
   skinBody.innerHTML=h;
   if(skNav.c){
     skinBody.querySelectorAll('.sk').forEach(c=>{const v=SKV[c.dataset.id]; if(v)c.querySelector('.covv').appendChild(v)});
-    [[shopV,TEA_VID],[shopV2,SH_VID],[shopV3,SUN_VID],[shopV4,KING_VID],[shopV5,'assets/gl_vid.mp4'],[shopV6,'assets/gojo_vid.mp4']].forEach(([v,src])=>{if(!v.src)v.src=src});
+    [[shopV,TEA_VID],[shopV2,SH_VID],[shopV3,SUN_VID],[shopV4,KING_VID],[shopV5,'assets/gl_vid.mp4'],[shopV6,'assets/gojo_vid.mp4'],[shopV7,'assets/zen_sk_vid.mp4']].forEach(([v,src])=>{if(!v.src)v.src=src});
     skinBody.querySelectorAll('video').forEach(v=>{try{const p=v.play(); if(p&&p.catch)p.catch(()=>{})}catch(e){}});
   }
 }
@@ -3721,7 +3850,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&skinPage.classList.
 /* ---------- profile & bag ---------- */
 const profPage=$('profPage'), bagPage=$('bagPage'), pfPick=$('pfPick'), pfBody=$('pfBody'), bagBody=$('bagBody');
 const pfV=document.createElement('video'); pfV.muted=true; pfV.loop=true; pfV.playsInline=true; pfV.setAttribute('playsinline',''); pfV.setAttribute('muted','');
-const SKIN_COVER={mugen:()=>['assets/gojo_vid.mp4','assets/gojo_poster.webp'],gluttony:()=>['assets/gl_vid.mp4','assets/gl_poster.webp'],greed:()=>[TEA_VID,TEA_POSTER],sun:()=>[SUN_VID,SUN_POSTER],shadow:()=>[SH_VID,SH_POSTER],king:()=>[KING_VID,KING_POSTER]};
+const SKIN_COVER={thunder:()=>['assets/zen_sk_vid.mp4','assets/zen_sk_poster.webp'],mugen:()=>['assets/gojo_vid.mp4','assets/gojo_poster.webp'],gluttony:()=>['assets/gl_vid.mp4','assets/gl_poster.webp'],greed:()=>[TEA_VID,TEA_POSTER],sun:()=>[SUN_VID,SUN_POSTER],shadow:()=>[SH_VID,SH_POSTER],king:()=>[KING_VID,KING_POSTER]};
 const SKIN_IMG={gluttony:()=>IMGS.sgl,greed:()=>IMGS.sinsub,sun:()=>IMGS.sun,shadow:()=>IMGS.sjin,king:()=>IMGS.king};
 const BOSS_TITLE={redwan:'ผู้พิชิตเรด วาน แอสเทียร์',sukuna:'ผู้พิชิตราชาแห่งคำสาป',kokushibo:'ผู้พิชิตจันทราชั้นสูง',mahoraga:'ผู้พิชิตเทพดาบ',aizen:'ผู้พิชิตเหนือปรัชญา'};
 const MYST=[
@@ -4097,7 +4226,7 @@ function zSlash(b){
 /* ดาบข้างตัว: วาดอย่างเดียว ไม่สร้างดาเมจตอนสัมผัส */
 function drawZenBlade(b){
   const im=znImg(); if(!im.complete||!im.naturalWidth)return;
-  heldSword(b,im,56);
+  heldSword(b,im,b.skin==='thunder'?80:56);
 }
 function drawZenFX(){
   for(const q of zFx){
