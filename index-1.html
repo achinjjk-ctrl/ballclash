@@ -627,7 +627,8 @@ ctx.setTransform(dpr,0,0,dpr,0,0);
 
 const IM={};
 IMGS.rick='assets/rick_face.webp';
-['kira','subaru','note','jin','shh','shd','sha','swd','bolt','gojo','gojo2','dom','dio','ell','sold','roller','bullet','wk','stf','shin','hak','naoya','tanjiro','sinsub','echi','toji','zen','sgl','shura','rimuru','rick'].forEach(k=>{const i=new Image();i.src=IMGS[k];IM[k]=i});
+IMGS.morty='assets/morty_face.webp'; IMGS.rickSk='assets/rick_sk_face.webp';
+['kira','subaru','note','jin','shh','shd','sha','swd','bolt','gojo','gojo2','dom','dio','ell','sold','roller','bullet','wk','stf','shin','hak','naoya','tanjiro','sinsub','echi','toji','zen','sgl','shura','rimuru','rick','morty','rickSk'].forEach(k=>{const i=new Image();i.src=IMGS[k];IM[k]=i});
 IM.glut=IMGS.glut.map(s=>{const i=new Image();i.src=s;return i});
 const TWI={sw:new Image(),wh:new Image(),dr:new Image()}; TWI.sw.src='assets/sw.webp'; TWI.wh.src='assets/wh.webp'; TWI.dr.src='assets/dr.webp';
 IM.sukuna=new Image(); IM.sukuna.src='assets/sukuna.jpg';
@@ -683,6 +684,7 @@ TYPES.zen={name:'เซน อิทซึ',img:'zen',hp:50,atk:4,r:21,spd:150,c
 TYPES.shura={name:'ชูร่า',img:'shura',hp:80,atk:8,r:21,spd:150,col:'#ff5a7a',helper:1,desc:'ติดตามสุบารุเสมอ · ทุก 5 วิ ยิงลำแสงแดง 10 ดาเมจ · ทุก 9 วิ ปล่อยแมลงป่องตามศัตรู ระเบิด 10 · ทุก 17 วิ ลำแสงใหญ่ 15 ดาเมจ'};
 TYPES.redwan={name:'เรด วาน แอสเทียร์',img:'redwan',hp:500,atk:0,r:64,spd:0,col:'#d2222d',boss:true,desc:'บอส Legend หยุดดาบทุกชนิด กระเด้งคืน 5 · ทุก 7 วิ ทำลายพื้น · ทุก 5 วิ คลื่นดาบ 3 คลื่น'};
 TYPES.rimuru={name:'ริมุรุ',img:'rimuru',hp:20,atk:1,r:19,spd:160,col:'#8fd3ff',desc:'เริ่มเกมตั้งชื่อบอลพันธมิตร 1 ตัว ให้บัฟดาเมจ 30% HP สูงสุด +20 และดูดเลือด 30% ของดาเมจ (ไม่มีพันธมิตรให้ตัวเอง) · ทุก 3 วิ ปล่อยหยดน้ำ 11 หยดกระจายทั่วสนาม ระเบิดทีหลัง หยดละ 2 ดาเมจ'};
+TYPES.morty={name:'มอตี้',img:'morty',hp:40,atk:3,r:21,spd:150,col:'#e6d28a'};
 TYPES.rick={name:'ริก ซานเชซ',img:'rick',hp:50,atk:5,r:21,spd:150,col:'#9be3c8',desc:'พาสซีฟ ร่างกายจักรกล: ฟื้น HP 1% ต่อวิ และทุก 15 วิได้โล่กันดาเมจ 1 ครั้ง · ทุก 10 วิยิงปืนสร้างพอร์ทัลคู่ · ทุก 7 วิดื่มเหล้า บัฟ 3 วิ'};
 const PGEM={rick:100};
 const KEYS=['kira','subaru','glut','jin','gojo','dio','ell','wk','shin','hak','naoya','tanjiro','zen','rimuru','rick'];
@@ -886,7 +888,7 @@ const FREE=['kira','subaru','glut','ell','zen'], PRICE={rimuru:100,jin:80,dio:10
 let coins=0, unlocked=FREE.slice(), lastReward=0, lastW=0, redeemed=[], gems=0, bossWon=[], lastGem=0, lastGemFirst=false, lastItem='';
 const CODES={'2ewsozg64j0':{items:[{id:'it_tojihair',n:5},{id:'it_soulsword',n:1},{id:'it_soulworm',n:4}]},'1gq4z52oc55':1000000,'24zgmdixxtm':{coins:20000,gems:100},'nhdaxhyhtx':{coins:0,gems:1000},'2gkobl24sq7':{coins:0,gems:10000}};
 const GEMS={redwan:{n:5,first:10},sukuna:{n:2,first:5},kokushibo:{n:5,first:20},mahoraga:{n:5,first:10},aizen:{n:20,first:50}};
-const CSK=[{id:'gluttony',char:'subaru',who:'สุบารุ',name:'บาปแห่งความตะกละ',price:20000},{id:'greed',char:'subaru',who:'สุบารุ',name:'บาปแห่งความโลภ',price:10000},{id:'sun',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'ระบำเทพสุริยัน',price:15000},{id:'king',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'การตื่นขึ้นของราชันย์อสูร',price:350,cur:'gem'},{id:'shadow',char:'jin',who:'ซองจินอู',name:'จักรพรรดิเงา',price:10000},{id:'mugen',char:'gojo',who:'โกโจ ซาโตรุ',name:'อัจฉริยะไสยเวทย์',price:20000},{id:'thunder',char:'zen',who:'เซน อิทซึ',name:'สุดยอดปรานอัสนี',price:15000}];
+const CSK=[{id:'gluttony',char:'subaru',who:'สุบารุ',name:'บาปแห่งความตะกละ',price:20000},{id:'greed',char:'subaru',who:'สุบารุ',name:'บาปแห่งความโลภ',price:10000},{id:'sun',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'ระบำเทพสุริยัน',price:15000},{id:'king',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'การตื่นขึ้นของราชันย์อสูร',price:350,cur:'gem'},{id:'shadow',char:'jin',who:'ซองจินอู',name:'จักรพรรดิเงา',price:10000},{id:'mugen',char:'gojo',who:'โกโจ ซาโตรุ',name:'อัจฉริยะไสยเวทย์',price:20000},{id:'thunder',char:'zen',who:'เซน อิทซึ',name:'สุดยอดปรานอัสนี',price:15000},{id:'ricc',char:'rick',who:'ริก ซานเชซ',name:'Ricc and Morty',price:888,cur:'gem'}];
 let cskOwned=[], skinSel={};
 let profile={name:'ผู้เล่น',title:'',avatar:'',show:[null,null,null],fav:''}, bag=[], mystOwned=[];
 try{const sv=JSON.parse(localStorage.getItem('ballclash.save')||'null'); if(sv){const pf=sv.profile||{}; profile={name:String(pf.name||'ผู้เล่น').slice(0,16),title:String(pf.title||'').slice(0,24),avatar:typeof pf.avatar==='string'&&pf.avatar.indexOf('data:image/')===0?pf.avatar:'',show:[0,1,2].map(i=>pf.show&&pf.show[i]&&typeof pf.show[i].k==='string'?{k:pf.show[i].k,s:pf.show[i].s||''}:null),fav:String(pf.fav||'')}; mystOwned=Array.isArray(sv.myst)?sv.myst.filter(x=>typeof x==='string'):[]; bag=Array.isArray(sv.bag)?sv.bag.filter(x=>x&&typeof x.id==='string').map(x=>({id:x.id,n:Math.max(1,x.n|0)})):[]; coins=Math.max(0,sv.coins|0); gems=Math.max(0,sv.gems|0); bossWon=(sv.bossWon||[]).filter(k=>GEMS[k]); unlocked=FREE.concat((sv.unlocked||[]).filter(k=>PRICE[k]||PGEM[k]||k==='toji')); redeemed=(sv.redeemed||[]).filter(h=>CODES[h]); ownedSkins=['default'].concat((sv.skins||[]).filter(id=>SKINS.some(k=>k.id===id&&k.price>0))); skinOn=ownedSkins.includes(sv.skin)?sv.skin:'default'; cskOwned=(sv.cskins||[]).filter(id=>CSK.some(k=>k.id===id)); if(sv.skinSel){for(const c in sv.skinSel){const id=sv.skinSel[c], kk=CSK.find(x=>x.id===id); if(kk&&kk.char===c&&cskOwned.includes(id))skinSel[c]=id}}else if(cskOwned.includes(sv.cskOn))skinSel.subaru=sv.cskOn}}catch(e){}
@@ -943,8 +945,14 @@ function hurt(t,amt,src,noFx,rg){
   if(!t.alive||t.inv>0||t.bar>0)return;
   if(src&&src!==t&&src.air>0)return;
   if(t.rk&&t.rk.sh&&amt>0){t.rk.sh=false; ring(t.x,t.y,t.r,t.r*3,0.4,'120,200,255'); texts.push({x:t.x,y:t.y-t.r-14,t:1,txt:'โล่กัน!',col:'#7fd0ff'}); return}
+  if(t.skin==='ricc'&&t.pair&&t.pair.alive&&!(t.pair.pin>0)&&amt>6&&src!==t.pair){
+    const m=t.pair;
+    if(src&&src.x!==undefined){const dx=src.x-t.x,dy=src.y-t.y,d=Math.hypot(dx,dy)||1,k=t.r+m.r+2; m.x=t.x+dx/d*k; m.y=t.y+dy/d*k}
+    ring(m.x,m.y,m.r,m.r*2.5,0.3,'230,210,138'); texts.push({x:m.x,y:m.y-m.r-12,t:0.9,txt:'มอตี้รับแทน!',col:'#e6d28a'});
+    hurt(m,amt,src,noFx,rg); return
+  }
   if(src&&src.skin==='mugen'&&src.bar>0)amt*=0.5;
-  if(src&&src.rk&&src.rk.buffT>0)amt*=noFx?1.4:2;
+  if(src&&src.rk&&src.rk.buffT>0)amt*=noFx?(src.rk.skinBuff?1.3:1.4):2;
   if(t.tk&&t.tk.brT>0)amt*=0.5;
   if(src&&src.skin==='thunder'&&src.type==='zen'&&src!==t&&amt>0&&!(t.tk&&t.tk.brT>0))t.thd={t:3,c:1};
   if(t.type==='redwan'&&src&&src!==t&&['tanjiro','sha','toji','zen'].includes(src.type))return;
@@ -990,6 +998,7 @@ function explode(b){
 }
 function loseHeart(b){
   if(b.mini||b.shadow||b.helper||b.conv||b.mimic)return;
+  if(b.pair&&b.pair.alive)return;
   hearts[b.team-1][b.slot]=0; drawHearts();
 }
 function kill(b){
@@ -2249,6 +2258,7 @@ function step(dt){
     if(b.type==='toji')tojiStep(b,dt);
     if(b.type==='zen'){if(b.skin==='thunder')thStep(b,dt); else zenStep(b,dt);}
     if(b.type==='rick')rkStep(b,dt);
+    if(b.type==='morty')mortyStep(b,dt);
     if(b.type==='shura')shuraStep(b,dt);
     if(b.type==='rimuru')rimStep(b,dt);
     if(b.type==='subaru'&&b.skin==='gluttony')gluttonyStep(b,dt);
@@ -2593,7 +2603,7 @@ function duelEnd(a1,a2){
   setTimeout(()=>{if(phase==='duelend'){hideOverlay();nextDuel(a1,a2)}},1500);
 }
 function nextDuel(a1,a2){
-  statDead=statDead.concat(balls.filter(b=>!b.alive&&!b.shadow&&!b.helper&&!b.mini&&!b.boss)); balls=balls.filter(b=>b.alive&&!b.shadow); texts=[]; bolts=[]; shots=[]; gjOrbs=[]; rkPortals=[]; pc={}; domain=null; timestop=null; soldiers=[]; balls.forEach(b=>{b.stun=0});
+  statDead=statDead.concat(balls.filter(b=>!b.alive&&!b.shadow&&!b.helper&&!b.mini&&!b.boss)); balls=balls.filter(b=>b.alive&&!b.shadow); texts=[]; bolts=[]; shots=[]; gjOrbs=[]; rkPortals=[]; rkShips.length=0; pc={}; domain=null; timestop=null; soldiers=[]; balls.forEach(b=>{b.stun=0});
   nghosts=[]; twfx=[]; sunfx=[]; kfx=[]; balls.forEach(b=>{b.kg=null;b.wnd=0;b.fear=0;b.kgd=0;b.sun=null;b.still=0;b.sdash=null;b.sbn=0;b.spinA=0;b.tw=null;b.nmove=null;b.nd=7;b.nw=12;b.nsT=0;if(b.type==='jin'){b.summoned=0;b.beru=null;b.ig=null;if(b.skin)b.cd=10}if(b.type==='ell'){b.summoned=0;b.cd=5}
     if(b.orig==='shin'){b.type='shin';b.copied=false;b.copyT=5;b.r=21;b.spd=150;b.cd=0;b.bar=0;b.lives=0;b.summoned=0;b.chain=null;b.dash=0;b.dashT=null;b.jp=0;b.rush=null}});
   for(const b of balls){
@@ -2661,6 +2671,12 @@ function applySkinTo(b){
   if(mine&&b.type==='jin'&&skinSel.jin==='shadow'){b.skin='shadow'; b.cd=10; b.beru=null; b.ig=null; return}
   if(mine&&b.type==='zen'&&skinSel.zen==='thunder'){b.skin='thunder'; b.spd*=2.5; b.tk={now:0,s1:5,s2:11,br:7,brT:0,trail:[],lcd:new Map(),sq:null}; return}
   if(mine&&b.type==='gojo'&&skinSel.gojo==='mugen'){b.skin='mugen'; b.gjc={ak:10,ao:8,mu:20,rc:20}; return}
+  if(mine&&b.type==='rick'&&skinSel.rick==='ricc'){
+    b.skin='ricc'; b.rk={sh:false,shCd:15,gunCd:10,gunT:0,drT:0,drCd:7,aim:0,buffT:0,skinBuff:false,beamCd:13,medCd:9,shipCd:20};
+    const side=b.x>W/2?-1:1, mx=Math.min(W-M-21,Math.max(M+21,b.x+side*(b.r+21+6)));
+    const m=mk('morty',b.team,mx,b.y,b.dx,b.dy,false,b.slot); m.pair=b; b.pair=m; m.mo={beamCd:13,drinkCd:9,shipCd:20};
+    balls.push(m); return
+  }
   if(mine&&b.type==='subaru'&&skinSel.subaru==='gluttony'){
     b.skin='gluttony'; b.max=60; b.hp=60; b.atk=0; b.gl={add:0,b5:0,t:0,bc:0,bk:false,cp:false};
     const a=Math.random()*6.283, sr=TYPES.shura.r, off=b.r+sr+8;
@@ -2738,7 +2754,7 @@ function finishPlace(){
   phase='count'; count=2.4; renderPanel();
 }
 function startBattle(){
-  sfx('start'); phase='battle'; resetBoss(); try{rimStart()}catch(e){} battleT=0; T=0; pc={}; shots=[]; gjOrbs=[]; rkPortals=[]; soldiers=[]; domain=null; timestop=null;
+  sfx('start'); phase='battle'; resetBoss(); try{rimStart()}catch(e){} battleT=0; T=0; pc={}; shots=[]; gjOrbs=[]; rkPortals=[]; rkShips.length=0; soldiers=[]; domain=null; timestop=null;
   for(const b of balls){b.vx=b.dx*b.spd;b.vy=b.dy*b.spd}
   applyBuffs();
   renderPanel();
@@ -2759,6 +2775,7 @@ function iconHTML(k){
   const t=TYPES[k];
   if(k==='zen'&&skinSel.zen==='thunder')return '<img class="av" alt="" src="assets/zen_sk_face.webp">';
   if(k==='gojo'&&skinSel.gojo==='mugen')return '<img class="av" alt="" src="assets/gojo_mugface.webp">';
+  if(k==='rick'&&skinSel.rick==='ricc')return '<img class="av" alt="" src="assets/rick_sk_face.webp">';
   if(t.img)return '<img class="av" alt="" src="'+(k==='glut'?IMGS.glut[0]:(k==='subaru'&&skinSel.subaru==='greed'?IMGS.sinsub:k==='subaru'&&skinSel.subaru==='gluttony'?IMGS.sgl:(k==='jin'&&skinSel.jin==='shadow'?IMGS.sjin:(k==='tanjiro'&&skinSel.tanjiro==='sun'?IMGS.sun:(k==='tanjiro'&&skinSel.tanjiro==='king'?IMGS.king:IMGS[k])))))+'">';
   return t.icon;
 }
@@ -2945,7 +2962,7 @@ function face(b){
   const d=TYPES[b.type];
   if(b.type==='toji'&&!b.mini){const v=tjVid(); if(v.readyState>=2&&v.videoWidth){ctx.save(); ctx.beginPath(); ctx.arc(b.x,b.y,b.r-4,0,6.283); ctx.clip(); ctx.drawImage(v,b.x-b.r+4,b.y-b.r+4,(b.r-4)*2,(b.r-4)*2); ctx.restore(); return}}
   if(d.img&&!b.mini){
-    const im=d.img==='glut'?IM.glut[Math.floor(animT*8)%IM.glut.length]:((b.type==='gojo'&&domain&&domain.owner===b&&domain.t>0)?IM.gojo2:(b.skin==='mugen'&&b.type==='gojo')?IM.mugface:(b.skin==='thunder'&&b.type==='zen')?IM.zenSk:IM[(b.skin==='greed'&&b.type==='subaru')?'sinsub':(b.skin==='gluttony'&&b.type==='subaru')?'sgl':(b.skin==='shadow'&&b.type==='jin'?'sjin':(b.skin==='sun'&&b.type==='tanjiro'?'sun':(b.skin==='king'&&b.type==='tanjiro'?'king':d.img)))]);
+    const im=d.img==='glut'?IM.glut[Math.floor(animT*8)%IM.glut.length]:((b.type==='gojo'&&domain&&domain.owner===b&&domain.t>0)?IM.gojo2:(b.skin==='mugen'&&b.type==='gojo')?IM.mugface:(b.skin==='thunder'&&b.type==='zen')?IM.zenSk:(b.skin==='ricc'&&b.type==='rick')?IM.rickSk:IM[(b.skin==='greed'&&b.type==='subaru')?'sinsub':(b.skin==='gluttony'&&b.type==='subaru')?'sgl':(b.skin==='shadow'&&b.type==='jin'?'sjin':(b.skin==='sun'&&b.type==='tanjiro'?'sun':(b.skin==='king'&&b.type==='tanjiro'?'king':d.img)))]);
     const rr=b.r-4;
     if(im&&im.complete&&im.naturalWidth){
       ctx.save(); ctx.beginPath(); ctx.arc(b.x,b.y,rr,0,6.283); ctx.clip();
@@ -3160,7 +3177,7 @@ IM.mugface=new Image(); IM.mugface.src='assets/gojo_mugface.webp';
 let gjOrbs=[];
 
 /* ================= ริก ซานเชซ ================= */
-const RK_IM={}; for(const [k,src] of [['gun','assets/rick_gun.webp'],['portal','assets/rick_portal.webp']]){const i=new Image(); i.src=src; RK_IM[k]=i}
+const RK_IM={}; for(const [k,src] of [['gun','assets/rick_gun.webp'],['portal','assets/rick_portal.webp'],['ship','assets/rick_ship.webp']]){const i=new Image(); i.src=src; RK_IM[k]=i}
 let rkPortals=[];
 function rkStep(b,dt){
   const R=b.rk||(b.rk={sh:false,shCd:15,gunCd:10,drCd:7,gunT:0,drT:0,aim:0,buffT:0});
@@ -3170,7 +3187,8 @@ function rkStep(b,dt){
   R.gunCd-=dt;
   if(R.gunCd<=0){const tg=gjTarget(b); if(tg){R.gunCd=10; rkFire(b,tg,R)}}
   R.drCd-=dt;
-  if(R.drCd<=0){R.drCd=7; R.buffT=3; R.drT=0.6; texts.push({x:b.x,y:b.y-b.r-14,t:1.2,txt:'เหล้า! +40% · ชน +100%',col:'#7dff6a'})}
+  if(b.skin!=='ricc'&&R.drCd<=0){R.drCd=7; R.buffT=3; R.skinBuff=false; R.drT=0.6; texts.push({x:b.x,y:b.y-b.r-14,t:1.2,txt:'เหล้า! +40% · ชน +100%',col:'#7dff6a'})}
+  if(b.skin==='ricc')rkSkinSkills(b,dt);
   if(R.gunT>0)R.gunT-=dt; if(R.drT>0)R.drT-=dt; if(R.buffT>0)R.buffT-=dt;
 }
 function rkFire(b,tg,R){
@@ -3188,7 +3206,66 @@ function rkFire(b,tg,R){
   ring(tg.x,tg.y,34,110,0.4,'120,255,80');
   ring(B.x,B.y,34,110,0.4,'120,255,80');
 }
+
+const rkShips=[];
+function beamFire(b,tg,dmg){
+  const ang=Math.atan2(tg.y-b.y,tg.x-b.x), L=W+H;
+  const x2=b.x+Math.cos(ang)*L, y2=b.y+Math.sin(ang)*L;
+  zFx.push({k:'beam',x1:b.x,y1:b.y,x2:x2,y2:y2,t:0.45,T:0.45});
+  for(const e of balls){ if(!e.alive||e.team===b.team||e.shadow)continue; if(thSegHit(b.x,b.y,x2,y2,e,0))hurt(e,dmg,b,true) }
+  ring(b.x,b.y,b.r,b.r*3,0.3,'255,230,120'); shake(0.15,2);
+}
+function shipLaunch(owner){
+  const tg=gjTarget(owner); if(!tg)return false;
+  const riders=[owner]; if(owner.pair&&owner.pair.alive)riders.push(owner.pair);
+  rkShips.push({owner,riders,x:owner.x,y:owner.y,ang:0,t:0,tg:tg});
+  texts.push({x:owner.x,y:owner.y-owner.r-16,t:1.1,txt:'ขึ้นยาน!',col:'#9be3c8'});
+  return true;
+}
+function rkSkinSkills(b,dt){
+  const R=b.rk;
+  R.beamCd-=dt;
+  if(R.beamCd<=0){R.beamCd=13; const tg=gjTarget(b); if(tg)beamFire(b,tg,10)}
+  R.medCd-=dt;
+  if(R.medCd<=0){R.medCd=9; const m=b.pair; if(m&&m.alive){m.hp=Math.min(m.max,m.hp+25); texts.push({x:m.x,y:m.y-m.r-14,t:1.2,txt:'ยา! +25 HP',col:'#9dff8a'}); ring(m.x,m.y,m.r,m.r*2.5,0.35,'157,255,138')}}
+  R.shipCd-=dt;
+  if(R.shipCd<=0){ if(shipLaunch(b))R.shipCd=20 }
+}
+function mortyStep(b,dt){
+  const mo=b.mo; if(!mo)return;
+  const R=b.pair&&b.pair.alive?b.pair:null;
+  mo.beamCd-=dt;
+  if(mo.beamCd<=0){mo.beamCd=13; const tg=gjTarget(b); if(tg)beamFire(b,tg,10)}
+  mo.drinkCd-=dt;
+  if(mo.drinkCd<=0){mo.drinkCd=9; if(R&&R.rk){R.rk.buffT=4; R.rk.skinBuff=true; R.rk.drT=0.6; texts.push({x:R.x,y:R.y-R.r-14,t:1.2,txt:'เหล้าจากมอตี้! +30% · ชน +100%',col:'#7dff6a'})}}
+  if(!R){ mo.shipCd-=dt; if(mo.shipCd<=0){ if(shipLaunch(b))mo.shipCd=20 } }
+}
+function rkShipsWorld(dt){
+  for(let i=rkShips.length-1;i>=0;i--){
+    const S=rkShips[i]; S.t+=dt;
+    if(!S.tg||!S.tg.alive){S.tg=gjTarget(S.owner)}
+    const tg=S.tg;
+    let done=false;
+    if(!tg||S.t>4){done=true}
+    else{
+      const dx=tg.x-S.x,dy=tg.y-S.y,d=Math.hypot(dx,dy)||1;
+      S.ang=Math.atan2(dy,dx);
+      const step=Math.min(d,330*dt);
+      S.x+=dx/d*step; S.y+=dy/d*step;
+      if(d<tg.r+14)done=true;
+    }
+    for(const r of S.riders){ if(!r.alive)continue; r.x=S.x; r.y=S.y; r.pin=0.2; r.inv=Math.max(r.inv,0.2); r.vx=0; r.vy=0 }
+    if(done){
+      rkShips.splice(i,1);
+      ring(S.x,S.y,40,130,0.5,'255,160,60'); shake(0.3,4);
+      for(const e of balls){ if(!e.alive||e.team===S.owner.team||e.shadow)continue; if(Math.hypot(e.x-S.x,e.y-S.y)<40+e.r)hurt(e,15,S.owner,true) }
+      texts.push({x:S.x,y:S.y-24,t:1,txt:'ระเบิด! 15',col:'#ffb070'});
+      for(const r of S.riders){ r.pin=0 }
+    }
+  }
+}
 function rkWorld(dt){
+  rkShipsWorld(dt);
   for(let i=rkPortals.length-1;i>=0;i--){rkPortals[i].t-=dt; if(rkPortals[i].cd>0)rkPortals[i].cd-=dt; if(rkPortals[i].t<=0)rkPortals.splice(i,1)}
   for(const b of balls){
     if(!b.alive||b.boss)continue;
@@ -3211,6 +3288,11 @@ function rkWorld(dt){
   }
 }
 function drawRickFX(){
+  for(const S of rkShips){
+    const im=RK_IM.ship; ctx.save(); ctx.translate(S.x,S.y); ctx.rotate(S.ang||0);
+    if(im&&im.complete&&im.naturalWidth)ctx.drawImage(im,-32,-18,64,36); else {ctx.fillStyle='#c8d6e0'; ctx.beginPath(); ctx.ellipse(0,0,30,12,0,0,6.283); ctx.fill()}
+    ctx.restore();
+  }
   for(const P of rkPortals){
     const a=Math.min(1,P.t);
     for(const p of P.pts){
@@ -3762,10 +3844,21 @@ const shopV=document.createElement('video');
 const shopV5=document.createElement('video'); shopV5.muted=true; shopV5.loop=true; shopV5.playsInline=true; shopV5.setAttribute('playsinline',''); shopV5.setAttribute('muted',''); shopV5.poster='assets/gl_poster.webp';
 const shopV6=document.createElement('video'); shopV6.muted=true; shopV6.loop=true; shopV6.playsInline=true; shopV6.setAttribute('playsinline',''); shopV6.setAttribute('muted',''); shopV6.poster='assets/gojo_poster.webp';
 const shopV7=document.createElement('video'); shopV7.muted=true; shopV7.loop=true; shopV7.playsInline=true; shopV7.setAttribute('playsinline',''); shopV7.setAttribute('muted',''); shopV7.poster='assets/zen_sk_poster.webp';
+const shopV8=document.createElement('video'); shopV8.muted=true; shopV8.loop=true; shopV8.playsInline=true; shopV8.setAttribute('playsinline',''); shopV8.setAttribute('muted',''); shopV8.poster='assets/ricc_poster.webp';
 const shopV3=document.createElement('video'); shopV3.muted=true; shopV3.loop=true; shopV3.playsInline=true; shopV3.setAttribute('playsinline',''); shopV3.setAttribute('muted',''); shopV3.poster=SUN_POSTER;
 const shopV4=document.createElement('video'); shopV4.muted=true; shopV4.loop=true; shopV4.playsInline=true; shopV4.setAttribute('playsinline',''); shopV4.setAttribute('muted',''); shopV4.poster=KING_POSTER;
 shopV.muted=true; shopV.loop=true; shopV.playsInline=true; shopV.setAttribute('playsinline',''); shopV.setAttribute('muted',''); shopV.poster=TEA_POSTER;
-const SK_INFO={thunder:{
+const SK_INFO={ricc:{
+  pv:['assets/rick_sk_face.webp'],
+  chips:['HP 50 (เท่าเดิม)','ดาเมจชน 5 (เท่าเดิม)'],
+  passive:'<b>พาสซีฟ:</b> พาสซีฟเดิมของริกใช้ได้ (ฟื้น HP 1%/วิ และโล่กันดาเมจทุก 15 วิ) · <b>เริ่มเกมจะมีมอตี้มาด้วย 1 ลูก</b> HP 40 ดาเมจชน 3 นับเป็นบอลหลักเหมือนริก · มอตี้เป็นโล่ให้ริกเสมอ รับดาเมจที่มากกว่า 6 แทนริก',
+  list:[
+    '<b>ปืนมิติ (สกิลเดียวที่คงอยู่):</b> ทุก 10 วิ ยิงพอร์ทัลคู่ 6 วิ วาปศัตรูและทำดาเมจ 10 แล้วพักวาป 1 วิ',
+    '<b>ทุก 13 วิ ปืนลำแสงใหญ่:</b> ยิงไปทิศทางของศัตรูที่ใกล้ที่สุด ทะลุทุกบอลในแนว ดาเมจ 10',
+    '<b>ทุก 9 วิ โยนยาให้มอตี้:</b> ฟื้นฟู HP มอตี้ 25',
+    '<b>ทุก 20 วิ ขึ้นยาน:</b> ริกกระโดดขึ้นยานในรูปสุดท้ายและขับไปชนศัตรูที่ใกล้ที่สุดแล้วระเบิด ดาเมจ 15 (ถ้ามอตี้อยู่ด้วยจะขึ้นยานลำเดียวกัน ดาเมจไม่ซ้ำ)',
+    '<b>มอตี้:</b> ทุก 13 วิ ปืนลำแสงใหญ่ 10 · ทุก 9 วิ โยนเหล้าให้ริก บัฟ 4 วิ +30% ดาเมจ และ +100% ดาเมจชน · ทุก 20 วิ ขึ้นยานร่วมกับริก'
+  ]},thunder:{
   pv:['assets/zen_sk_face.webp'],
   chips:['HP 50 (เท่าเดิม)','ดาเมจชน 4 (เท่าเดิม)'],
   passive:'<b>พาสซีฟ:</b> เคลื่อนที่เร็วขึ้น x2.5 และทิ้งเอฟเฟคสายฟ้าตามหลังทุกครั้งที่เคลื่อนที่ เอฟเฟคนี้สร้างดาเมจ 3 ให้บอลศัตรูที่โดน (คูลดาวน์ 1 วิต่อบอลต่อการโดน 1 ครั้ง)',
@@ -3883,10 +3976,11 @@ const ANIME=[
   {id:'rz',name:'Re:Zero',logo:'assets/logo_rz.webp',chars:['subaru']},
   {id:'ds',name:'Demon Slayer',logo:'assets/logo_ds.webp',chars:['tanjiro','zen']},
   {id:'sl',name:'Solo Leveling',logo:'assets/logo_sl.webp',chars:['jin']},
-  {id:'jjk',name:'Jujutsu Kaisen',logo:'assets/logo_jjk.webp',chars:['gojo']}];
+  {id:'jjk',name:'Jujutsu Kaisen',logo:'assets/logo_jjk.webp',chars:['gojo']},
+  {id:'rm',name:'Rick and Morty',logo:'assets/logo_rm.webp',chars:['rick']}];
 let skNav={a:null,c:null};
 const skinPage=$('skinPage'), skinBody=$('skinBody');
-const SKV={greed:shopV,shadow:shopV2,sun:shopV3,king:shopV4,gluttony:shopV5,mugen:shopV6,thunder:shopV7};
+const SKV={greed:shopV,shadow:shopV2,sun:shopV3,king:shopV4,gluttony:shopV5,mugen:shopV6,thunder:shopV7,ricc:shopV8};
 function renderSkinPage(){
   $('skinBack').textContent=(skNav.a||skNav.c)?'‹ ย้อนกลับ':'‹ กลับ';
   let h='';
@@ -3908,7 +4002,7 @@ function renderSkinPage(){
   skinBody.innerHTML=h;
   if(skNav.c){
     skinBody.querySelectorAll('.sk').forEach(c=>{const v=SKV[c.dataset.id]; if(v)c.querySelector('.covv').appendChild(v)});
-    [[shopV,TEA_VID],[shopV2,SH_VID],[shopV3,SUN_VID],[shopV4,KING_VID],[shopV5,'assets/gl_vid.mp4'],[shopV6,'assets/gojo_vid.mp4'],[shopV7,'assets/zen_sk_vid.mp4']].forEach(([v,src])=>{if(!v.src)v.src=src});
+    [[shopV,TEA_VID],[shopV2,SH_VID],[shopV3,SUN_VID],[shopV4,KING_VID],[shopV5,'assets/gl_vid.mp4'],[shopV6,'assets/gojo_vid.mp4'],[shopV7,'assets/zen_sk_vid.mp4'],[shopV8,'assets/ricc_vid.mp4']].forEach(([v,src])=>{if(!v.src)v.src=src});
     skinBody.querySelectorAll('video').forEach(v=>{try{const p=v.play(); if(p&&p.catch)p.catch(()=>{})}catch(e){}});
   }
 }
@@ -3933,7 +4027,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&skinPage.classList.
 /* ---------- profile & bag ---------- */
 const profPage=$('profPage'), bagPage=$('bagPage'), pfPick=$('pfPick'), pfBody=$('pfBody'), bagBody=$('bagBody');
 const pfV=document.createElement('video'); pfV.muted=true; pfV.loop=true; pfV.playsInline=true; pfV.setAttribute('playsinline',''); pfV.setAttribute('muted','');
-const SKIN_COVER={thunder:()=>['assets/zen_sk_vid.mp4','assets/zen_sk_poster.webp'],mugen:()=>['assets/gojo_vid.mp4','assets/gojo_poster.webp'],gluttony:()=>['assets/gl_vid.mp4','assets/gl_poster.webp'],greed:()=>[TEA_VID,TEA_POSTER],sun:()=>[SUN_VID,SUN_POSTER],shadow:()=>[SH_VID,SH_POSTER],king:()=>[KING_VID,KING_POSTER]};
+const SKIN_COVER={ricc:()=>['assets/ricc_vid.mp4','assets/ricc_poster.webp'],thunder:()=>['assets/zen_sk_vid.mp4','assets/zen_sk_poster.webp'],mugen:()=>['assets/gojo_vid.mp4','assets/gojo_poster.webp'],gluttony:()=>['assets/gl_vid.mp4','assets/gl_poster.webp'],greed:()=>[TEA_VID,TEA_POSTER],sun:()=>[SUN_VID,SUN_POSTER],shadow:()=>[SH_VID,SH_POSTER],king:()=>[KING_VID,KING_POSTER]};
 const SKIN_IMG={gluttony:()=>IMGS.sgl,greed:()=>IMGS.sinsub,sun:()=>IMGS.sun,shadow:()=>IMGS.sjin,king:()=>IMGS.king};
 const BOSS_TITLE={redwan:'ผู้พิชิตเรด วาน แอสเทียร์',sukuna:'ผู้พิชิตราชาแห่งคำสาป',kokushibo:'ผู้พิชิตจันทราชั้นสูง',mahoraga:'ผู้พิชิตเทพดาบ',aizen:'ผู้พิชิตเหนือปรัชญา'};
 const MYST=[
@@ -4314,7 +4408,12 @@ function drawZenBlade(b){
 function drawZenFX(){
   for(const q of zFx){
     const a=Math.max(0,q.t/q.T);
-    if(q.k==='seg'){
+    if(q.k==='beam'){
+      ctx.save(); ctx.globalAlpha=a; ctx.lineCap='round';
+      ctx.strokeStyle='rgba(157,255,138,.55)'; ctx.lineWidth=24; ctx.beginPath(); ctx.moveTo(q.x1,q.y1); ctx.lineTo(q.x2,q.y2); ctx.stroke();
+      ctx.strokeStyle='#eaffd6'; ctx.lineWidth=7; ctx.beginPath(); ctx.moveTo(q.x1,q.y1); ctx.lineTo(q.x2,q.y2); ctx.stroke();
+      ctx.restore();
+    }else if(q.k==='seg'){
       ctx.save(); ctx.globalAlpha=a; ctx.lineCap='round';
       ctx.strokeStyle='rgba(255,220,90,.55)'; ctx.lineWidth=12; ctx.beginPath(); ctx.moveTo(q.x1,q.y1); ctx.lineTo(q.x2,q.y2); ctx.stroke();
       ctx.strokeStyle='#fff8c8'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(q.x1,q.y1); ctx.lineTo(q.x2,q.y2); ctx.stroke();
