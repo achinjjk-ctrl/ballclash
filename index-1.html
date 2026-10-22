@@ -626,7 +626,8 @@ cv.width=W*dpr; cv.height=H*dpr;
 ctx.setTransform(dpr,0,0,dpr,0,0);
 
 const IM={};
-['kira','subaru','note','jin','shh','shd','sha','swd','bolt','gojo','gojo2','dom','dio','ell','sold','roller','bullet','wk','stf','shin','hak','naoya','tanjiro','sinsub','echi','toji','zen','sgl','shura','rimuru'].forEach(k=>{const i=new Image();i.src=IMGS[k];IM[k]=i});
+IMGS.rick='assets/rick_face.webp';
+['kira','subaru','note','jin','shh','shd','sha','swd','bolt','gojo','gojo2','dom','dio','ell','sold','roller','bullet','wk','stf','shin','hak','naoya','tanjiro','sinsub','echi','toji','zen','sgl','shura','rimuru','rick'].forEach(k=>{const i=new Image();i.src=IMGS[k];IM[k]=i});
 IM.glut=IMGS.glut.map(s=>{const i=new Image();i.src=s;return i});
 const TWI={sw:new Image(),wh:new Image(),dr:new Image()}; TWI.sw.src='assets/sw.webp'; TWI.wh.src='assets/wh.webp'; TWI.dr.src='assets/dr.webp';
 IM.sukuna=new Image(); IM.sukuna.src='assets/sukuna.jpg';
@@ -682,7 +683,9 @@ TYPES.zen={name:'เซน อิทซึ',img:'zen',hp:50,atk:4,r:21,spd:150,c
 TYPES.shura={name:'ชูร่า',img:'shura',hp:80,atk:8,r:21,spd:150,col:'#ff5a7a',helper:1,desc:'ติดตามสุบารุเสมอ · ทุก 5 วิ ยิงลำแสงแดง 10 ดาเมจ · ทุก 9 วิ ปล่อยแมลงป่องตามศัตรู ระเบิด 10 · ทุก 17 วิ ลำแสงใหญ่ 15 ดาเมจ'};
 TYPES.redwan={name:'เรด วาน แอสเทียร์',img:'redwan',hp:500,atk:0,r:64,spd:0,col:'#d2222d',boss:true,desc:'บอส Legend หยุดดาบทุกชนิด กระเด้งคืน 5 · ทุก 7 วิ ทำลายพื้น · ทุก 5 วิ คลื่นดาบ 3 คลื่น'};
 TYPES.rimuru={name:'ริมุรุ',img:'rimuru',hp:20,atk:1,r:19,spd:160,col:'#8fd3ff',desc:'เริ่มเกมตั้งชื่อบอลพันธมิตร 1 ตัว ให้บัฟดาเมจ 30% HP สูงสุด +20 และดูดเลือด 30% ของดาเมจ (ไม่มีพันธมิตรให้ตัวเอง) · ทุก 3 วิ ปล่อยหยดน้ำ 11 หยดกระจายทั่วสนาม ระเบิดทีหลัง หยดละ 2 ดาเมจ'};
-const KEYS=['kira','subaru','glut','jin','gojo','dio','ell','wk','shin','hak','naoya','tanjiro','zen','rimuru'];
+TYPES.rick={name:'ริก ซานเชซ',img:'rick',hp:50,atk:5,r:21,spd:150,col:'#9be3c8',desc:'พาสซีฟ ร่างกายจักรกล: ฟื้น HP 1% ต่อวิ และทุก 15 วิได้โล่กันดาเมจ 1 ครั้ง · ทุก 10 วิยิงปืนสร้างพอร์ทัลคู่ · ทุก 7 วิดื่มเหล้า บัฟ 3 วิ'};
+const PGEM={rick:100};
+const KEYS=['kira','subaru','glut','jin','gojo','dio','ell','wk','shin','hak','naoya','tanjiro','zen','rimuru','rick'];
 const OFF1=[[-30,18],[30,18],[0,-24]], OFF2=[[-30,-18],[30,-18],[0,24]];
 const ZONE_START=10, ZONE_END=120, ZONE_R0=270, ZONE_R1=110, ZONE_C=[200,200];
 function zoneR(t){const r1=mode==='boss'?160:ZONE_R1; return t<=ZONE_START?ZONE_R0:Math.max(r1,ZONE_R0-(ZONE_R0-r1)*Math.min(1,(t-ZONE_START)/(ZONE_END-ZONE_START)))}
@@ -939,7 +942,9 @@ function bossOf(){return balls.find(x=>x.boss&&x.alive)||true}
 function hurt(t,amt,src,noFx,rg){
   if(!t.alive||t.inv>0||t.bar>0)return;
   if(src&&src!==t&&src.air>0)return;
+  if(t.rk&&t.rk.sh&&amt>0){t.rk.sh=false; ring(t.x,t.y,t.r,t.r*3,0.4,'120,200,255'); texts.push({x:t.x,y:t.y-t.r-14,t:1,txt:'โล่กัน!',col:'#7fd0ff'}); return}
   if(src&&src.skin==='mugen'&&src.bar>0)amt*=0.5;
+  if(src&&src.rk&&src.rk.buffT>0)amt*=noFx?1.4:2;
   if(t.tk&&t.tk.brT>0)amt*=0.5;
   if(src&&src.skin==='thunder'&&src.type==='zen'&&src!==t&&amt>0&&!(t.tk&&t.tk.brT>0))t.thd={t:3,c:1};
   if(t.type==='redwan'&&src&&src!==t&&['tanjiro','sha','toji','zen'].includes(src.type))return;
@@ -2243,6 +2248,7 @@ function step(dt){
     if(b.type==='tanjiro'){if(b.skin==='sun')sunStep(b,dt);else if(b.skin==='king')kingStep(b,dt);else tanjiroStep(b,dt)}
     if(b.type==='toji')tojiStep(b,dt);
     if(b.type==='zen'){if(b.skin==='thunder')thStep(b,dt); else zenStep(b,dt);}
+    if(b.type==='rick')rkStep(b,dt);
     if(b.type==='shura')shuraStep(b,dt);
     if(b.type==='rimuru')rimStep(b,dt);
     if(b.type==='subaru'&&b.skin==='gluttony')gluttonyStep(b,dt);
@@ -2481,7 +2487,7 @@ function step(dt){
     }
     soldiers=soldiers.filter(q=>q.life>0);
   }
-  if(!ts){bossWorld(dt); naoyaWorld(dt); tanjiroWorld(dt); sunWorld(dt); kingWorld(dt); skinWorld(dt); redWorld(dt); rimWorld(dt); gjWorld(dt); thWorld(dt)}
+  if(!ts){bossWorld(dt); naoyaWorld(dt); tanjiroWorld(dt); sunWorld(dt); kingWorld(dt); skinWorld(dt); redWorld(dt); rimWorld(dt); gjWorld(dt); thWorld(dt); rkWorld(dt)}
   if(domain&&!ts){
     domain.t-=dt; const o=domain.owner;
     if(domain.t<=0||!o.alive){domain=null;for(const e of balls)e.stun=0}
@@ -2587,7 +2593,7 @@ function duelEnd(a1,a2){
   setTimeout(()=>{if(phase==='duelend'){hideOverlay();nextDuel(a1,a2)}},1500);
 }
 function nextDuel(a1,a2){
-  statDead=statDead.concat(balls.filter(b=>!b.alive&&!b.shadow&&!b.helper&&!b.mini&&!b.boss)); balls=balls.filter(b=>b.alive&&!b.shadow); texts=[]; bolts=[]; shots=[]; gjOrbs=[]; pc={}; domain=null; timestop=null; soldiers=[]; balls.forEach(b=>{b.stun=0});
+  statDead=statDead.concat(balls.filter(b=>!b.alive&&!b.shadow&&!b.helper&&!b.mini&&!b.boss)); balls=balls.filter(b=>b.alive&&!b.shadow); texts=[]; bolts=[]; shots=[]; gjOrbs=[]; rkPortals=[]; pc={}; domain=null; timestop=null; soldiers=[]; balls.forEach(b=>{b.stun=0});
   nghosts=[]; twfx=[]; sunfx=[]; kfx=[]; balls.forEach(b=>{b.kg=null;b.wnd=0;b.fear=0;b.kgd=0;b.sun=null;b.still=0;b.sdash=null;b.sbn=0;b.spinA=0;b.tw=null;b.nmove=null;b.nd=7;b.nw=12;b.nsT=0;if(b.type==='jin'){b.summoned=0;b.beru=null;b.ig=null;if(b.skin)b.cd=10}if(b.type==='ell'){b.summoned=0;b.cd=5}
     if(b.orig==='shin'){b.type='shin';b.copied=false;b.copyT=5;b.r=21;b.spd=150;b.cd=0;b.bar=0;b.lives=0;b.summoned=0;b.chain=null;b.dash=0;b.dashT=null;b.jp=0;b.rush=null}});
   for(const b of balls){
@@ -2732,7 +2738,7 @@ function finishPlace(){
   phase='count'; count=2.4; renderPanel();
 }
 function startBattle(){
-  sfx('start'); phase='battle'; resetBoss(); try{rimStart()}catch(e){} battleT=0; T=0; pc={}; shots=[]; gjOrbs=[]; soldiers=[]; domain=null; timestop=null;
+  sfx('start'); phase='battle'; resetBoss(); try{rimStart()}catch(e){} battleT=0; T=0; pc={}; shots=[]; gjOrbs=[]; rkPortals=[]; soldiers=[]; domain=null; timestop=null;
   for(const b of balls){b.vx=b.dx*b.spd;b.vy=b.dy*b.spd}
   applyBuffs();
   renderPanel();
@@ -2837,17 +2843,17 @@ function renderPanel(){
       h+='<div class="stslide"><div class="pgrid">';
       PKS.slice(pi*PG,pi*PG+PG).forEach(k=>{
         const i=selArr.indexOf(k), lk=isLocked(k);
-        h+='<button class="card'+(i>=0?' sel':'')+(lk?' lock':'')+(k===focusK?' focus':'')+'" data-k="'+k+'">'+(i>=0?'<span class="ord">'+(i+1)+'</span>':'')+'<div class="pimg">'+pkImg(k)+'</div><div class="nm">'+TYPES[k].name+'</div>'+(lk?'<div class="pr">'+coinSVG+PRICE[k]+'</div>':'')+'</button>';
+        h+='<button class="card'+(i>=0?' sel':'')+(lk?' lock':'')+(k===focusK?' focus':'')+'" data-k="'+k+'">'+(i>=0?'<span class="ord">'+(i+1)+'</span>':'')+'<div class="pimg">'+pkImg(k)+'</div><div class="nm">'+TYPES[k].name+'</div>'+(lk?'<div class="pr">'+(PGEM[k]?gemSVG:coinSVG)+(PGEM[k]||PRICE[k])+'</div>':'')+'</button>';
       });
       h+='</div></div>';
     }
     if(bh)h+='<div class="stslide"><div class="pkBuf">'+bh+'</div></div>';
     h+='</div>'+(slides>1?'<div class="sdots">'+Array.from({length:slides},(_,q)=>'<i'+(q===pickPg?' class="on"':'')+'></i>').join('')+'</div>':'');
     let inf;
-    if(focusK){const t=TYPES[focusK]; inf='<div class="pkName">'+t.name+(isLocked(focusK)?' <span class="pkLock">🔒 ปลดล็อก '+PRICE[focusK]+' เหรียญ</span>':'')+'</div><div class="pkStat">HP '+t.hp+' · แรง '+t.atk+'</div><div class="pkDesc">'+t.desc+'</div>'}
+    if(focusK){const t=TYPES[focusK]; inf='<div class="pkName">'+t.name+(isLocked(focusK)?' <span class="pkLock">🔒 ปลดล็อก '+(PGEM[focusK]?PGEM[focusK]+' เพชร':PRICE[focusK]+' เหรียญ')+'</span>':'')+'</div><div class="pkStat">HP '+t.hp+' · แรง '+t.atk+'</div><div class="pkDesc">'+t.desc+'</div>'}
     else inf='<div class="pkDesc">บอลตายลูกไหน เสียหัวใจ 1 ดวง หัวใจหมดคือแพ้'+(mode==='1v1'?' · 1V1 ลงสนามตามลำดับที่เลือก':'')+'</div>';
     h+='<div id="info" class="pkInfo">'+inf;
-    if(focusK&&isLocked(focusK)){const pr=PRICE[focusK],ok=coins>=pr; h+='<div class="row"><button class="btn buy" id="buy"'+(ok?'':' disabled')+'>ปลดล็อก '+coinSVG+pr+(ok?'':' · เหรียญไม่พอ')+'</button></div>'}
+    if(focusK&&isLocked(focusK)){const gem=!!PGEM[focusK], pr=gem?PGEM[focusK]:PRICE[focusK], ok=(gem?gems:coins)>=pr; h+='<div class="row"><button class="btn buy'+(gem?' g':'')+'" id="buy"'+(ok?'':' disabled')+'>ปลดล็อก '+(gem?gemSVG:coinSVG)+pr+(ok?'':' · '+(gem?'เพชร':'เหรียญ')+'ไม่พอ')+'</button></div>'}
     h+='</div>';
     h+='<div class="row"><button class="btn alt" id="menu">เปลี่ยนโหมด</button>'+(mode==='boss'?'<button class="btn alt" id="bchg">เปลี่ยนบอส</button>':'')+'<button class="btn" id="go"'+((mode==='test'?testPick.length===2:myPick.length===3)?'':' disabled')+'>'+(mode==='test'?'เริ่มทดสอบ':'ไปวางบอล')+'</button></div>';
   }else if(phase==='place'){
@@ -2903,7 +2909,7 @@ $('panel').addEventListener('click',e=>{
   if(id==='bgo'&&bPlayable(BOSSLIST[bcI])){bossSel=false; drawHearts(); renderPanel()}
   else if(id==='bchg'){bossSel=true; renderPanel()}
   else if(id==='go'&&(mode==='test'?testPick.length===2:myPick.length===3))startPlace();
-  else if(id==='buy'){const k=focusK; if(k&&isLocked(k)&&coins>=PRICE[k]){coins-=PRICE[k]; unlocked.push(k); saveGame(); if(myPick.length<3)myPick.push(k); renderPanel()}}
+  else if(id==='buy'){const k=focusK; if(k&&isLocked(k)){ if(PGEM[k]&&gems>=PGEM[k]){gems-=PGEM[k]; unlocked.push(k); saveGame(); if(myPick.length<3)myPick.push(k); renderPanel()} else if(!PGEM[k]&&coins>=PRICE[k]){coins-=PRICE[k]; unlocked.push(k); saveGame(); if(myPick.length<3)myPick.push(k); renderPanel()} }}
   else if(id==='auto')autoPlace();
   else if(id==='back'){phase='pick';balls=[];pv=null;renderPanel()}
   else if(id==='spd'){speedMul=speedMul>=3?1:speedMul+1;renderPanel()}
@@ -3151,6 +3157,84 @@ function drawAuras(){
 const GJ_IM={}; for(const [k,src] of [['akaga','assets/gj_akaga.webp'],['ao','assets/gj_ao.webp'],['mura','assets/gj_murasaki.webp'],['eyes','assets/mugen_eyes.webp']]){const i=new Image(); i.src=src; GJ_IM[k]=i}
 IM.mugface=new Image(); IM.mugface.src='assets/gojo_mugface.webp';
 let gjOrbs=[];
+
+/* ================= ริก ซานเชซ ================= */
+const RK_IM={}; for(const [k,src] of [['gun','assets/rick_gun.webp'],['portal','assets/rick_portal.webp']]){const i=new Image(); i.src=src; RK_IM[k]=i}
+let rkPortals=[];
+function rkStep(b,dt){
+  const R=b.rk||(b.rk={sh:false,shCd:15,gunCd:10,drCd:7,gunT:0,drT:0,aim:0,buffT:0});
+  R.shCd-=dt;
+  if(R.shCd<=0){R.shCd=15; if(!R.sh){R.sh=true; texts.push({x:b.x,y:b.y-b.r-14,t:1.2,txt:'โล่พร้อม!',col:'#7fd0ff'})}}
+  b.hp=Math.min(b.max,b.hp+b.max*0.01*dt);
+  R.gunCd-=dt;
+  if(R.gunCd<=0){const tg=gjTarget(b); if(tg){R.gunCd=10; rkFire(b,tg,R)}}
+  R.drCd-=dt;
+  if(R.drCd<=0){R.drCd=7; R.buffT=3; R.drT=0.6; texts.push({x:b.x,y:b.y-b.r-14,t:1.2,txt:'เหล้า! +40% · ชน +100%',col:'#7dff6a'})}
+  if(R.gunT>0)R.gunT-=dt; if(R.drT>0)R.drT-=dt; if(R.buffT>0)R.buffT-=dt;
+}
+function rkFire(b,tg,R){
+  R.gunT=0.7; R.aim=Math.atan2(tg.y-b.y,tg.x-b.x);
+  zFx.push({k:'seg',x1:b.x,y1:b.y,x2:tg.x,y2:tg.y,t:0.3,T:0.3});
+  let B=null;
+  for(let i=0;i<40&&!B;i++){
+    const a=Math.random()*6.283, d=150+Math.random()*120;
+    const x=tg.x+Math.cos(a)*d, y=tg.y+Math.sin(a)*d;
+    if(x>M+30&&x<W-M-30&&y>M+30&&y<H-M-30)B={x,y};
+  }
+  if(!B)B={x:W-tg.x,y:H-tg.y};
+  rkPortals=rkPortals.filter(P=>P.owner!==b);
+  rkPortals.push({owner:b,t:6,pts:[{x:tg.x,y:tg.y,r:34},{x:B.x,y:B.y,r:34}]});
+  ring(tg.x,tg.y,34,110,0.4,'120,255,80');
+  ring(B.x,B.y,34,110,0.4,'120,255,80');
+}
+function rkWorld(dt){
+  for(let i=rkPortals.length-1;i>=0;i--){rkPortals[i].t-=dt; if(rkPortals[i].t<=0)rkPortals.splice(i,1)}
+  for(const b of balls){
+    if(!b.alive||b.boss)continue;
+    if(b.rkcd>0){b.rkcd-=dt; continue}
+    for(const P of rkPortals){
+      const own=P.owner;
+      if(b.team===own.team&&b!==own)continue;
+      let hit=false;
+      for(let i=0;i<2&&!hit;i++){
+        const p=P.pts[i], q=P.pts[1-i];
+        if(Math.hypot(b.x-p.x,b.y-p.y)<p.r+b.r*0.5){
+          b.x=q.x; b.y=q.y; b.rkcd=0.8; hit=true;
+          ring(q.x,q.y,q.r,q.r*2.5,0.3,'120,255,80');
+          if(b.team!==own.team)hurt(b,5,own,true);
+        }
+      }
+      if(hit)break;
+    }
+  }
+}
+function drawRickFX(){
+  for(const P of rkPortals){
+    const a=Math.min(1,P.t);
+    for(const p of P.pts){
+      ctx.save(); ctx.globalAlpha=a; ctx.translate(p.x,p.y); ctx.rotate(animT*1.5);
+      const im=RK_IM.portal; const h=p.r*2.6;
+      if(im&&im.complete&&im.naturalWidth){const w=h*im.naturalWidth/im.naturalHeight; ctx.drawImage(im,-w/2,-h/2,w,h)}
+      ctx.restore();
+    }
+  }
+  for(const b of balls){
+    if(!b.alive||b.type!=='rick'||!b.rk)continue;
+    const R=b.rk;
+    if(R.sh){ctx.save(); ctx.strokeStyle='rgba(120,200,255,.9)'; ctx.lineWidth=3; ctx.shadowColor='#7fd0ff'; ctx.shadowBlur=10; ctx.beginPath(); ctx.arc(b.x,b.y,b.r+5,0,6.283); ctx.stroke(); ctx.restore()}
+    if(R.gunT>0){
+      const g=RK_IM.gun, ang=R.aim, cx=b.x+Math.cos(ang)*(b.r+14), cy=b.y+Math.sin(ang)*(b.r+14);
+      ctx.save(); ctx.translate(cx,cy); ctx.rotate(ang+0.49);
+      if(g&&g.complete&&g.naturalWidth){const w=44,h=w*g.naturalHeight/g.naturalWidth; ctx.drawImage(g,-w/2,-h/2,w,h)}
+      ctx.restore();
+    }
+    if(R.drT>0){
+      const x=b.x+b.r*0.9, y=b.y-b.r*0.7;
+      ctx.save(); ctx.fillStyle='#7dff6a'; ctx.strokeStyle='#eaffea'; ctx.lineWidth=1.5;
+      ctx.fillRect(x-4,y-8,8,14); ctx.strokeRect(x-4,y-8,8,14); ctx.fillStyle='#ddd'; ctx.fillRect(x-2,y-11,4,3); ctx.restore();
+    }
+  }
+}
 IM.zenSk=new Image(); IM.zenSk.src='assets/zen_sk_face.webp';
 /* ================= เซน อิทซึ: สุดยอดปรานอัสนี ================= */
 let thFxList=[];
@@ -3164,26 +3248,6 @@ function thSegHit(x1,y1,x2,y2,e,pad){
   const dx=x2-x1,dy=y2-y1,L=dx*dx+dy*dy||1;
   let t=((e.x-x1)*dx+(e.y-y1)*dy)/L; t=Math.max(0,Math.min(1,t));
   return Math.hypot(e.x-(x1+dx*t),e.y-(y1+dy*t))<e.r+pad;
-}
-function thSkill1(b,tg){
-  const dx=tg.x-b.x,dy=tg.y-b.y,d=Math.hypot(dx,dy)||1,ux=dx/d,uy=dy/d;
-  const far=2000, x2=b.x+ux*far, y2=b.y+uy*far;
-  thFxList.push({k:'seg',x1:b.x,y1:b.y,x2:b.x+ux*d*3,y2:b.y+uy*d*3,t:0.22,T:0.22});
-  for(const e of balls){
-    if(!e.alive||e.team===b.team||e.shadow)continue;
-    if(thSegHit(b.x,b.y,x2,y2,e,7)){ hurt(e,4,b,true); if(e===tg) thStun(e,1); }
-  }
-  sfx('hit');
-}
-function thPass(b,tg,i){
-  const dx=tg.x-b.x,dy=tg.y-b.y,d=Math.hypot(dx,dy)||1,ux=dx/d,uy=dy/d;
-  const ax=tg.x-ux*170, ay=tg.y-uy*170, bx=tg.x+ux*170, by=tg.y+uy*170;
-  const sx=i%2===0?ax:bx, sy=i%2===0?ay:by, ex=i%2===0?bx:ax, ey=i%2===0?by:ay;
-  thFxList.push({k:'seg',x1:sx,y1:sy,x2:ex,y2:ey,t:0.12,T:0.12});
-  for(const e of balls){
-    if(!e.alive||e.team===b.team||e.shadow)continue;
-    if(thSegHit(sx,sy,ex,ey,e,8)){ hurt(e,1,b,true); if(e===tg) thStun(e,1); }
-  }
 }
 const THCLR={stun:0,slow:0,sbn:0,poison:0,fear:0,burn:0,burnT:0,prey:0,heavy:0,bind:false,pin:0,thd:null,pull:0,pulledBy:null,chain:null};
 function thStep(b,dt){
@@ -3211,20 +3275,37 @@ function thStep(b,dt){
       if(hit){T.lcd.set(e,T.now); hurt(e,3,b,true)}
     }
   }
-  /* กระบวนท่าที่ 1: ทุก 5 วิ */
-  T.s1-=dt;
-  if(T.s1<=0){const tg=thNearest(b); if(tg){T.s1=5; thSkill1(b,tg)}}
-  /* กระบวนท่าที่ 7: ทุก 11 วิ พุ่งไปมา 7 รอบ */
+  /* พุ่งทะลุ: กระบวนท่าที่ 1 ทุก 5 วิ และกระบวนท่าที่ 7 ทุก 11 วิ */
+  if(T.brT>0){ if(b.zen&&b.zen.dash)b.zen.dash=null; return }
+  if(b.zen&&b.zen.dash){thDashTick(b,dt); return}
+  T.s1-=dt; T.s2-=dt;
   if(T.sq){
-    T.sq.t-=dt;
-    if(T.sq.t<=0){
-      const tg=T.sq.tg;
-      if(T.sq.i<7&&tg.alive){thPass(b,tg,T.sq.i); T.sq.i++; T.sq.t=0.15}
-      else T.sq=null;
-    }
+    if(T.sq.gap>0)T.sq.gap-=dt;
+    else if(T.sq.i<7){
+      const tg=(T.sq.tg&&T.sq.tg.alive)?T.sq.tg:thNearest(b);
+      if(tg){thDashStart(b,tg,1); T.sq.tg=tg; T.sq.i++; T.sq.gap=0.05; return}
+    }else T.sq=null;
   }
-  T.s2-=dt;
-  if(T.s2<=0&&!T.sq){const tg=thNearest(b); if(tg){T.s2=11; T.sq={tg,i:0,t:0}}}
+  if(T.s1<=0){const tg=thNearest(b); if(tg){T.s1=5; thDashStart(b,tg,0); return}}
+  if(T.s2<=0&&!T.sq){const tg=thNearest(b); if(tg){T.s2=11; T.sq={tg,i:0,gap:0}}}
+}
+function thDashStart(b,tg,kind){
+  const dx=tg.x-b.x, dy=tg.y-b.y, d=Math.hypot(dx,dy)||1;
+  const dur=Math.min(0.9,(d+90)/900);
+  b.zen={dash:{dx:dx/d,dy:dy/d,t:dur,hit:new Set(),lx:b.x,ly:b.y,tg,kind}};
+  ring(b.x,b.y,b.r,b.r*2.5,0.2,'255,210,63');
+  sfx('hit');
+}
+function thDashTick(b,dt){
+  const D=b.zen.dash; D.t-=dt;
+  zFx.push({k:'seg',x1:D.lx,y1:D.ly,x2:b.x,y2:b.y,t:0.2,T:0.2}); D.lx=b.x; D.ly=b.y;
+  const dmg=D.kind===0?4:1;
+  for(const e of balls){
+    if(!e.alive||e.team===b.team||e.shadow||D.hit.has(e))continue;
+    if(Math.hypot(e.x-b.x,e.y-b.y)<b.r+e.r){D.hit.add(e); hurt(e,dmg,b,true); if(e===D.tg)thStun(e,1); ring(e.x,e.y,e.r,e.r*2,0.25,'255,210,63')}
+  }
+  const atWall=b.x<=M+b.r+1||b.x>=W-M-b.r-1||b.y<=M+b.r+1||b.y>=H-M-b.r-1;
+  if(D.t<=0||atWall){b.zen.dash=null; b.vx=0; b.vy=0}
 }
 function thWorld(dt){
   thTick(dt);
@@ -3366,7 +3447,7 @@ function drawGjFX(){
     ctx.restore();
   }
 }
-function drawBossFX(){ drawThunderFX(); drawGjFX(); drawZenFX(); drawGluttonyFX(); drawRedFX(); drawRimFX();
+function drawBossFX(){ drawRickFX(); drawThunderFX(); drawGjFX(); drawZenFX(); drawGluttonyFX(); drawRedFX(); drawRimFX();
   drawTojiFX();
   drawTanjiroFX();
   drawSunFX();
@@ -3688,8 +3769,8 @@ const SK_INFO={thunder:{
   passive:'<b>พาสซีฟ:</b> เคลื่อนที่เร็วขึ้น x2.5 และทิ้งเอฟเฟคสายฟ้าตามหลังทุกครั้งที่เคลื่อนที่ เอฟเฟคนี้สร้างดาเมจ 3 ให้บอลศัตรูที่โดน (คูลดาวน์ 1 วิต่อบอลต่อการโดน 1 ครั้ง)',
   list:[
     '<b>สถานะสายฟ้า:</b> ดาเมจทุกครั้งที่เซนทำให้ศัตรูติดสถานะสายฟ้า ทำดาเมจ 1 ต่อวินาที นาน 3 วิ ไม่ซ้อนทับและไม่สะสม (ยิ่งโดนซ้ำจะรีเซ็ตเวลา)',
-    '<b>ทุก 5 วิ กระบวนท่าที่ 1:</b> พุ่งทะลุบอลศัตรูทั้งหมดในแนวเส้นตรง ดาเมจ 4 และทำให้เป้าหมายที่เซนเลือกสตั้น 1 วิ (สตั้นติดแค่เป้าหมายเดียว)',
-    '<b>ทุก 11 วิ กระบวนท่าที่ 7:</b> เลือกเป้าหมาย 1 เป้า พุ่งทะลุไปมาต่อเนื่อง 7 รอบ รอบละ 1 ดาเมจ (รวม 7) และสตั้นเป้าหมายที่เลือกทุกรอบ บอลอื่นที่โดนได้ดาเมจแต่ไม่สตั้น',
+    '<b>ทุก 5 วิ กระบวนท่าที่ 1:</b> พุ่งทะลุบอลศัตรูที่ใกล้ที่สุดในแนวเส้นตรง ดาเมจ 4 แก่บอลศัตรูทุกตัวที่โดน และทำให้เป้าหมายที่เลือกสตั้น 1 วิ',
+    '<b>ทุก 11 วิ กระบวนท่าที่ 7:</b> พุ่งทะลุเป้าหมายที่ใกล้ที่สุดไปมาต่อเนื่อง 7 รอบ รอบละ 1 ดาเมจ และสตั้นเป้าหมายทุกรอบ',
     '<b>พักหายใจ:</b> ทุก 7 วิ เซนนิ่ง 3 วิ ฟื้นฟู HP วินาทีละ 3 ลดดาเมจที่ได้รับ 50% และต้านสถานะผิดปกติทั้งหมดจากระบบอื่นของเกมระหว่างพัก'
   ]},mugen:{
   pv:['assets/gojo_mugface.webp'],
