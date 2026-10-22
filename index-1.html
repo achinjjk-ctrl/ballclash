@@ -284,8 +284,8 @@ button.btn.buy .gem{width:16px;height:16px;vertical-align:-3px}
 .skact .btn{flex:0 1 260px}
 .skact .need{font-size:13px;color:#ff8a96}
 
-#profPage,#bagPage,#mysPage,#gachaPage{position:fixed;inset:0;z-index:25;display:none;flex-direction:column;background:#07080d;overflow-y:auto;padding-top:env(safe-area-inset-top,0px);-webkit-overflow-scrolling:touch}
-#profPage.open,#bagPage.open,#mysPage.open,#gachaPage.open{display:flex}
+#profPage,#bagPage,#mysPage,#gachaPage,#skinPage{position:fixed;inset:0;z-index:25;display:none;flex-direction:column;background:#07080d;overflow-y:auto;padding-top:env(safe-area-inset-top,0px);-webkit-overflow-scrolling:touch}
+#profPage.open,#bagPage.open,#mysPage.open,#gachaPage.open,#skinPage.open{display:flex}
 .mcard{margin:0 16px;border:1px solid rgba(255,255,255,.18);border-left:3px solid #b07cff;background:rgba(14,16,22,.96);padding:14px;display:flex;flex-direction:column;gap:10px}
 .mcard .mh{display:flex;align-items:center;gap:12px}
 .mcard .mq{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle,#2a2147,#0b0c14);border:2px dashed #6b5aa8;display:grid;place-items:center;font-size:30px;font-weight:800;color:#8b7bd0;flex:none;overflow:hidden}
@@ -374,6 +374,57 @@ button.btn.buy .gem{width:16px;height:16px;vertical-align:-3px}
 .tjmsg{opacity:0;transition:opacity .6s;color:#ffd876;font-weight:700;font-size:17px;text-align:center}
 .tjmsg.show{opacity:1}
 .bagit .btn{margin-top:6px;padding:4px 8px;font-size:12px}
+
+/* ---------- full-screen character pick ---------- */
+body.in-pick #app{max-width:none;min-height:100vh;min-height:100dvh;padding:14px 12px calc(14px + env(safe-area-inset-bottom,0px));gap:10px}
+body.in-pick #top,body.in-pick #rr,body.in-pick #arenaWrap{display:none}
+body.in-pick #panel{flex:1;display:flex;flex-direction:column;min-height:0;background:none;border:0;padding:0;backdrop-filter:none;-webkit-backdrop-filter:none}
+.pkTitle{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:700;letter-spacing:.04em;color:var(--ink);text-transform:uppercase}
+.pkTitle::before{content:"";width:4px;height:22px;background:var(--red);border-radius:2px}
+.pkTitle small{font-size:13px;font-weight:400;color:var(--dim);letter-spacing:0;text-transform:none}
+body.in-pick .pgcar{flex:1;min-height:0;align-items:flex-start}
+body.in-pick .pgcar .stslide{padding:4px 0 0;align-self:stretch}
+.pgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px 6px;align-content:start;padding:8px 2px 12px}
+.pgcar .card{padding:0;display:flex;flex-direction:column;background:rgba(14,17,21,.92);border:1px solid rgba(255,255,255,.18);border-radius:6px;overflow:visible;transition:transform .2s,box-shadow .2s,border-color .2s}
+.pgcar .card .pimg{width:100%;aspect-ratio:3/5;border-radius:5px 5px 0 0;overflow:hidden;background:#0b0d11;display:flex;align-items:center;justify-content:center}
+.pgcar .card .pimg img{width:100%;height:100%;object-fit:cover;object-position:50% 18%;display:block;border-radius:0;border:0;background:none}
+.pgcar .card .pimg .emo{font-size:30px}
+.pgcar .card .nm{font-size:11px;line-height:1.2;padding:4px 2px 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+.pgcar .card .pr{font-size:10px;padding-bottom:4px}
+.pgcar .card.lock .pimg img{filter:grayscale(1) brightness(.55)}
+.pgcar .card.sel{border-color:var(--red);box-shadow:0 0 0 1px var(--red),0 0 12px rgba(217,41,62,.45)}
+.pgcar .card.focus{transform:scale(1.1);z-index:3;border-color:#fff;box-shadow:0 0 0 2px #fff,0 8px 22px rgba(0,0,0,.7)}
+.pgcar .card .ord{top:-6px;right:-6px}
+.pkInfo{margin-top:auto;background:rgba(10,12,15,.84);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:4px;padding:12px 14px;min-height:120px}
+.pkName{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:19px;font-weight:700;color:var(--ink)}
+.pkStat{font-size:13px;color:var(--steel);margin-top:4px}
+.pkDesc{font-size:13px;color:var(--dim);line-height:1.5;margin-top:6px}
+.pkLock{font-size:12px;color:#f2c254;font-weight:600}
+body.in-pick .row{margin-top:10px}
+.pkBuf{padding:6px 0}
+
+/* ---------- shop cards & skin page ---------- */
+.stcard{display:flex;align-items:center;gap:12px;background:rgba(14,17,21,.9);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:4px;padding:12px}
+.stcard.soon{opacity:.6}
+.stcard .sc-ic{font-size:28px;width:52px;height:52px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:#0b0d11;border-radius:6px}
+.stcard h3{margin:0;font-size:17px;color:var(--ink)}
+.stcard p{margin:4px 0 0;font-size:12.5px;color:var(--dim);line-height:1.45}
+.stcard .btn{margin-left:auto;flex:0 0 auto}
+.skBody{padding:12px 14px 40px}
+.skAnGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.skAnime{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#0b0d11;padding:0;cursor:pointer;color:var(--ink);font:inherit;text-align:center}
+.skAnime .lg{height:120px;display:flex;align-items:center;justify-content:center;padding:10px;background:linear-gradient(180deg,#f4f6f9,#d9dee5)}
+.skAnime .lg img{max-width:100%;max-height:100%;object-fit:contain}
+.skAnime b{font-size:14px;padding:8px 6px 0}
+.skAnime small{font-size:11.5px;color:var(--dim);padding:2px 6px 9px}
+.skChGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.skChar{display:flex;flex-direction:column;background:rgba(14,17,21,.92);border:1px solid rgba(255,255,255,.18);border-radius:6px;padding:0;overflow:hidden;cursor:pointer;color:var(--ink);font:inherit;text-align:left}
+.skChar .pimg{width:100%;aspect-ratio:3/4;background:#0b0d11;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.skChar .pimg img{width:100%;height:100%;object-fit:cover;object-position:50% 18%;display:block;border:0;border-radius:0;background:none}
+.skChar b{font-size:13px;padding:6px 6px 0}
+.skChar small{font-size:11px;color:var(--dim);padding:0 6px 8px}
+.skNavTop{margin:4px 0 12px}
+.skNavTop h3{margin:0;font-size:18px;color:var(--ink)}
 </style>
 </head>
 <body>
@@ -391,7 +442,8 @@ button.btn.buy .gem{width:16px;height:16px;vertical-align:-3px}
   <div class="mlist" role="menu">
     <button class="mi on" role="menuitem" data-m="1v1" data-d="ลงสนามทีละ 1 ลูก ใครแพ้เสียหัวใจ 1 ดวงแล้วลงลูกต่อไป ผู้ชนะคงเลือดเดิม · มีโหมดย่อยทดสอบตัวละครให้เลือกในหน้าเลือกตัว"><span class="mtxt"><b>1V1</b><i>ปล่อยทีละลูก</i></span><span class="badge">›</span></button>
     <button class="mi" role="menuitem" data-m="3v3" data-d="ปล่อยบอลทั้ง 3 ลูกออกจากจุดเดียว แล้วแยกกันกลิ้งออกไป"><span class="mtxt"><b>3V3</b><i>ปล่อยพร้อมกัน</i></span><span class="badge">›</span></button>
-    <button class="mi" role="menuitem" data-m="shop" data-d="ร้านค้าเต็มจอ ซื้อสกินตัวละคร ที่เปลี่ยนทั้งรูปลักษณ์และสกิลของตัวละครนั้น และมีปุ่มสกินลูกบอลอยู่ในร้านนี้"><span class="mtxt"><b>ร้านค้า</b><i>สกินตัวละคร · สกินลูกบอล</i></span><span class="badge">›</span></button>
+    <button class="mi" role="menuitem" data-m="shop" data-d="ร้านค้าเต็มจอ ตัวละครลึกลับ ตู้เนื้อเรื่อง และสกินลูกบอล"><span class="mtxt"><b>ร้านค้า</b><i>ตัวละครลึกลับ · ตู้เนื้อเรื่อง</i></span><span class="badge">›</span></button>
+    <button class="mi" role="menuitem" data-m="skin" data-d="สกินตัวละครแยกตามอนิเมะ ทั้งรูปลักษณ์และสกิล แยกจากร้านค้า"><span class="mtxt"><b>สกิน</b><i>สกินตัวละครแยกตามอนิเมะ</i></span><span class="badge">›</span></button>
     <button class="mi" role="menuitem" data-m="boss" data-d="ร่วมมือ 3 ลูกสู้บอส เลือกได้ระหว่างสุคุนะ โคคุชิโบ มโหราฬ และไอเซ็น (เลื่อนเลือกบอสได้) บอสยืนนิ่งไม่มีดาเมจชน ใช้สกิลสุดโหด ชนะรับเหรียญก้อนใหญ่และเพชร"><span class="mtxt"><b>โหมดตีบอส</b><i>สุคุนะ</i></span><span class="badge">›</span></button>
     <button class="mi" role="menuitem" data-m="bag" data-d="กระเป๋าเก็บไอเทมที่ได้จากบอส (ตอนนี้ยังไม่มีไอเทมให้เก็บ)"><span class="mtxt"><b>กระเป๋า</b><i>ไอเทมจากบอส</i></span><span class="badge">›</span></button>
   </div>
@@ -411,9 +463,11 @@ button.btn.buy .gem{width:16px;height:16px;vertical-align:-3px}
 
 <section id="shopPage" aria-label="ร้านค้า">
   <div class="shtop"><button class="codebtn" id="shopBack" type="button">‹ กลับ</button><h2>ร้านค้า</h2><div class="coinchip" id="coinsShop"></div></div>
-  <div class="shbody"><p class="shsub">สกินตัวละครเปลี่ยนทั้งรูปลักษณ์และสกิล แต่ HP และดาเมจชนพื้นฐานเท่าเดิม ใช้กับบอลของคุณเท่านั้น</p><div class="shtools"><button class="btn alt" id="shopSkin" type="button">🎨 สกินลูกบอล</button><button class="btn alt" id="shopMys" type="button">❓ ตัวละครลึกลับ</button><button class="btn alt" id="shopGacha" type="button">🎰 ตู้ JJK</button><button class="btn alt" type="button" disabled style="opacity:.55">🎴 ตู้ Demon Slayer · เร็วๆนี้</button></div><div id="shopList" style="display:flex;flex-direction:column;gap:18px"></div></div>
+  <div class="shbody"><p class="shsub">ตัวละครลึกลับและตู้เนื้อเรื่องต่างๆ</p><div class="shtools"><button class="btn alt" id="shopSkin" type="button">🎨 สกินลูกบอล</button></div><div id="shopList" style="display:flex;flex-direction:column;gap:18px"></div></div>
 </section>
 
+
+<section id="skinPage" class="pgx" aria-label="สกินตัวละคร"><div class="shtop"><button class="codebtn" id="skinBack" type="button">‹ กลับ</button><h2>สกินตัวละคร</h2></div><div id="skinBody"></div></section>
 
 <section id="mysPage" class="pgx" aria-label="ตัวละครลึกลับ">
   <div class="shtop"><button class="codebtn" id="mysBack" type="button">‹ กลับ</button><h2>ตัวละครลึกลับ</h2><div class="coinchip" id="coinsMys"></div></div>
@@ -829,7 +883,7 @@ const FREE=['kira','subaru','glut','ell','zen'], PRICE={rimuru:100,jin:80,dio:10
 let coins=0, unlocked=FREE.slice(), lastReward=0, lastW=0, redeemed=[], gems=0, bossWon=[], lastGem=0, lastGemFirst=false, lastItem='';
 const CODES={'2ewsozg64j0':{items:[{id:'it_tojihair',n:5},{id:'it_soulsword',n:1},{id:'it_soulworm',n:4}]},'1gq4z52oc55':1000000,'24zgmdixxtm':{coins:20000,gems:100},'nhdaxhyhtx':{coins:0,gems:1000}};
 const GEMS={redwan:{n:5,first:10},sukuna:{n:2,first:5},kokushibo:{n:5,first:20},mahoraga:{n:5,first:10},aizen:{n:20,first:50}};
-const CSK=[{id:'gluttony',char:'subaru',who:'สุบารุ',name:'บาปแห่งความตะกละ',price:10000},{id:'greed',char:'subaru',who:'สุบารุ',name:'บาปแห่งความโลภ',price:10000},{id:'sun',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'ระบำเทพสุริยัน',price:10000},{id:'king',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'การตื่นขึ้นของราชันย์อสูร',price:1000,cur:'gem'},{id:'shadow',char:'jin',who:'ซองจินอู',name:'จักรพรรดิเงา',price:10000},{id:'mugen',char:'gojo',who:'โกโจ ซาโตรุ',name:'อัจฉริยะไสยเวทย์',price:10000}];
+const CSK=[{id:'gluttony',char:'subaru',who:'สุบารุ',name:'บาปแห่งความตะกละ',price:20000},{id:'greed',char:'subaru',who:'สุบารุ',name:'บาปแห่งความโลภ',price:10000},{id:'sun',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'ระบำเทพสุริยัน',price:15000},{id:'king',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'การตื่นขึ้นของราชันย์อสูร',price:350,cur:'gem'},{id:'shadow',char:'jin',who:'ซองจินอู',name:'จักรพรรดิเงา',price:10000},{id:'mugen',char:'gojo',who:'โกโจ ซาโตรุ',name:'อัจฉริยะไสยเวทย์',price:20000}];
 let cskOwned=[], skinSel={};
 let profile={name:'ผู้เล่น',title:'',avatar:'',show:[null,null,null],fav:''}, bag=[], mystOwned=[];
 try{const sv=JSON.parse(localStorage.getItem('ballclash.save')||'null'); if(sv){const pf=sv.profile||{}; profile={name:String(pf.name||'ผู้เล่น').slice(0,16),title:String(pf.title||'').slice(0,24),avatar:typeof pf.avatar==='string'&&pf.avatar.indexOf('data:image/')===0?pf.avatar:'',show:[0,1,2].map(i=>pf.show&&pf.show[i]&&typeof pf.show[i].k==='string'?{k:pf.show[i].k,s:pf.show[i].s||''}:null),fav:String(pf.fav||'')}; mystOwned=Array.isArray(sv.myst)?sv.myst.filter(x=>typeof x==='string'):[]; bag=Array.isArray(sv.bag)?sv.bag.filter(x=>x&&typeof x.id==='string').map(x=>({id:x.id,n:Math.max(1,x.n|0)})):[]; coins=Math.max(0,sv.coins|0); gems=Math.max(0,sv.gems|0); bossWon=(sv.bossWon||[]).filter(k=>GEMS[k]); unlocked=FREE.concat((sv.unlocked||[]).filter(k=>PRICE[k]||k==='toji')); redeemed=(sv.redeemed||[]).filter(h=>CODES[h]); ownedSkins=['default'].concat((sv.skins||[]).filter(id=>SKINS.some(k=>k.id===id&&k.price>0))); skinOn=ownedSkins.includes(sv.skin)?sv.skin:'default'; cskOwned=(sv.cskins||[]).filter(id=>CSK.some(k=>k.id===id)); if(sv.skinSel){for(const c in sv.skinSel){const id=sv.skinSel[c], kk=CSK.find(x=>x.id===id); if(kk&&kk.char===c&&cskOwned.includes(id))skinSel[c]=id}}else if(cskOwned.includes(sv.cskOn))skinSel.subaru=sv.cskOn}}catch(e){}
@@ -2753,9 +2807,10 @@ function bcSet(i){
   });
   window.addEventListener('resize',()=>{if(bossSel)bcUpdate()});
 })();
+function pkImg(k){const ic=iconHTML(k), m=ic.match(/src="([^"]+)"/); return m?'<img alt="" src="'+m[1]+'">':'<div class="emo">'+ic+'</div>'}
 function renderPanel(){
   const p=$('panel'); let h='';
-  document.body.classList.toggle('in-menu',phase==='menu'); updCoins();
+  document.body.classList.toggle('in-menu',phase==='menu'); document.body.classList.toggle('in-pick',phase==='pick'&&!(mode==='boss'&&bossSel)); updCoins();
   if(phase==='menu'){
     h+='<div class="hint">เลือกโหมดการเล่น</div>';
     h+='<button class="mode" data-m="1v1"><b>1V1 · ปล่อยทีละลูก</b><span>ลงสนามทีละ 1 ลูก ใครแพ้เสียหัวใจ 1 ดวงแล้วลงลูกต่อไป ผู้ชนะคงเลือดเดิม</span></button>';
@@ -2764,20 +2819,31 @@ function renderPanel(){
     bcI=Math.max(0,BOSSLIST.indexOf(bossKey));
     h+=bossSelHTML();
   }else if(phase==='pick'){
-    if(mode==='1v1'||mode==='test')h+='<div class="seg"><button type="button" data-sub="1v1"'+(mode==='1v1'?' class="on"':'')+'>1V1 ปกติ</button><button type="button" data-sub="test"'+(mode==='test'?' class="on"':'')+'>ทดสอบตัวละคร</button></div>';
-    if(mode==='test')h+='<div class="hint">โหมดทดสอบ · เลือกตัวละครที่ปลดล็อกแล้ว 2 ตัว (ตัวแรก = ฝั่งคุณ, ตัวที่สอง = ฝั่งตรงข้าม) · สกินที่ใส่อยู่มีผลทั้งสองฝั่ง · ไม่ได้รับรางวัล</div>';
-    if(mode==='boss')h+='<div class="hint">บอส: <b>'+TYPES[bossKey].name+'</b> · '+TIER[bossKey][0]+' · HP '+TYPES[bossKey].hp+'</div>';
-    const PKS=pkKeys(), PG=8, np=Math.ceil(PKS.length/PG); h+='<div class="stcar pgcar" data-pg="1">';
-    PKS.forEach((k,ki)=>{
-      const i=(mode==='test'?testPick:myPick).indexOf(k);
-      const lk=isLocked(k);
-      if(ki%PG===0){const pi=ki/PG; h+='<div class="stslide">'+(np>1?'<button class="sarr '+(pi<np-1?'r':'l')+'" data-sa="1" aria-label="หน้าอื่น">'+(pi<np-1?'▶':'◀')+'</button>':'')+'<div id="cards">'}
-      h+='<button class="card'+(i>=0?' sel':'')+(lk?' lock':'')+'" data-k="'+k+'"><span class="ord">'+(i+1)+'</span><div class="ic">'+iconHTML(k)+'</div><div class="nm">'+TYPES[k].name+'</div>'+(lk?'<div class="pr">'+coinSVG+PRICE[k]+'</div>':'')+'</button>';
-      if(ki%PG===PG-1||ki===PKS.length-1)h+='</div></div>';
-    });
-    h+='</div>'+(np>1?'<div class="sdots">'+Array.from({length:np},(_,q)=>'<i'+(q===pickPg?' class="on"':'')+'></i>').join('')+'</div>':'')+'<div id="info">'+(focusK?('<b>'+TYPES[focusK].name+'</b>'+(isLocked(focusK)?' · 🔒 ปลดล็อก '+PRICE[focusK]+' เหรียญ':'')+' · เลือด '+TYPES[focusK].hp+' · แรง '+TYPES[focusK].atk+' — '+TYPES[focusK].desc):('บอลตายลูกไหน เสียหัวใจ 1 ดวง หัวใจหมดคือแพ้'+(mode==='1v1'?' · 1V1 ลงสนามตามลำดับที่เลือก':'')))+'</div>';
+    const PKS=pkKeys(), PG=10, np=Math.ceil(PKS.length/PG);
+    const bh=mode==='boss'?buffsHTML():'';
+    const slides=np+(bh?1:0), selArr=mode==='test'?testPick:myPick, need=mode==='test'?2:3;
+    h+='<div class="pkTop"><div class="pkTitle">เลือกตัวละคร <small>'+selArr.length+'/'+need+' ลูก'+(mode==='test'?' · โหมดทดสอบ':'')+'</small></div>';
+    if(mode==='1v1'||mode==='test')h+='<div class="seg" style="margin-top:8px"><button type="button" data-sub="1v1"'+(mode==='1v1'?' class="on"':'')+'>1V1 ปกติ</button><button type="button" data-sub="test"'+(mode==='test'?' class="on"':'')+'>ทดสอบตัวละคร</button></div>';
+    if(mode==='test')h+='<div class="hint" style="margin:6px 0 0"><small>ตัวแรก = ฝั่งคุณ · ตัวที่สอง = ฝั่งตรงข้าม · สกินที่ใส่อยู่มีผลทั้งสองฝั่ง</small></div>';
+    if(mode==='boss')h+='<div class="hint" style="margin:6px 0 0">บอส: <b>'+TYPES[bossKey].name+'</b> · '+TIER[bossKey][0]+' · HP '+TYPES[bossKey].hp+'</div>';
+    h+='</div>';
+    h+='<div class="stcar pgcar" data-pg="1">';
+    for(let pi=0;pi<np;pi++){
+      h+='<div class="stslide"><div class="pgrid">';
+      PKS.slice(pi*PG,pi*PG+PG).forEach(k=>{
+        const i=selArr.indexOf(k), lk=isLocked(k);
+        h+='<button class="card'+(i>=0?' sel':'')+(lk?' lock':'')+(k===focusK?' focus':'')+'" data-k="'+k+'">'+(i>=0?'<span class="ord">'+(i+1)+'</span>':'')+'<div class="pimg">'+pkImg(k)+'</div><div class="nm">'+TYPES[k].name+'</div>'+(lk?'<div class="pr">'+coinSVG+PRICE[k]+'</div>':'')+'</button>';
+      });
+      h+='</div></div>';
+    }
+    if(bh)h+='<div class="stslide"><div class="pkBuf">'+bh+'</div></div>';
+    h+='</div>'+(slides>1?'<div class="sdots">'+Array.from({length:slides},(_,q)=>'<i'+(q===pickPg?' class="on"':'')+'></i>').join('')+'</div>':'');
+    let inf;
+    if(focusK){const t=TYPES[focusK]; inf='<div class="pkName">'+t.name+(isLocked(focusK)?' <span class="pkLock">🔒 ปลดล็อก '+PRICE[focusK]+' เหรียญ</span>':'')+'</div><div class="pkStat">HP '+t.hp+' · แรง '+t.atk+'</div><div class="pkDesc">'+t.desc+'</div>'}
+    else inf='<div class="pkDesc">บอลตายลูกไหน เสียหัวใจ 1 ดวง หัวใจหมดคือแพ้'+(mode==='1v1'?' · 1V1 ลงสนามตามลำดับที่เลือก':'')+'</div>';
+    h+='<div id="info" class="pkInfo">'+inf;
     if(focusK&&isLocked(focusK)){const pr=PRICE[focusK],ok=coins>=pr; h+='<div class="row"><button class="btn buy" id="buy"'+(ok?'':' disabled')+'>ปลดล็อก '+coinSVG+pr+(ok?'':' · เหรียญไม่พอ')+'</button></div>'}
-    if(mode==='boss')h+=buffsHTML();
+    h+='</div>';
     h+='<div class="row"><button class="btn alt" id="menu">เปลี่ยนโหมด</button>'+(mode==='boss'?'<button class="btn alt" id="bchg">เปลี่ยนบอส</button>':'')+'<button class="btn" id="go"'+((mode==='test'?testPick.length===2:myPick.length===3)?'':' disabled')+'>'+(mode==='test'?'เริ่มทดสอบ':'ไปวางบอล')+'</button></div>';
   }else if(phase==='place'){
     if(mode==='test'){
@@ -3575,17 +3641,10 @@ function skCard(k){
 }
 function renderShop(){
   updCoins();
-  const keep={}; shopList.querySelectorAll('.skrow').forEach(r=>{keep[r.dataset.char]=r.scrollLeft});
-  const groups=[]; for(const k of CSK){let g=groups.find(x=>x.char===k.char); if(!g){g={char:k.char,list:[]};groups.push(g)} g.list.push(k)}
-  shopList.innerHTML=groups.map(g=>g.list.length>1?
-    '<div class="skwrap"><div class="skhint">'+g.list.length+' สกินของ '+g.list[0].who+' · เลื่อนไปทางขวาเพื่อดูสกินอื่น ›</div><div class="skrow" data-char="'+g.char+'">'+g.list.map(skCard).join('')+'</div><div class="skdots">'+g.list.map((k,i)=>'<i'+(i?'':' class="on"')+'></i>').join('')+'</div></div>':
-    skCard(g.list[0])).join('');
-  const COVV={greed:shopV,shadow:shopV2,sun:shopV3,king:shopV4,gluttony:shopV5,mugen:shopV6};
-  shopList.querySelectorAll('.sk').forEach(c=>{const v=COVV[c.dataset.id]; if(v)c.querySelector('.covv').appendChild(v)});
-  shopList.querySelectorAll('.skrow').forEach(r=>{
-    if(keep[r.dataset.char])r.scrollLeft=keep[r.dataset.char];
-    r.addEventListener('scroll',()=>{const i=Math.round(r.scrollLeft/Math.max(1,r.clientWidth)); r.parentNode.querySelectorAll('.skdots i').forEach((d,j)=>d.classList.toggle('on',j===i))},{passive:true});
-  });
+  shopList.innerHTML=
+    '<div class="stcard"><div class="sc-ic">❓</div><div><h3>ตัวละครลึกลับ</h3><p>รวบรวมไอเทมจากบอสและตู้ JJK แล้วแลกเป็นไข่ เปิดไข่เพื่อปลดล็อกตัวละคร</p></div><button class="btn" type="button" data-go="mys">เปิด</button></div>'+
+    '<div class="stcard"><div class="sc-ic">🎰</div><div><h3>ตู้ JJK</h3><p>ตู้เนื้อเรื่องมหาเวทย์ผนึกมาร หมุนสุ่มรางวัลได้ที่นี่</p></div><button class="btn" type="button" data-go="gacha">เปิดตู้</button></div>'+
+    '<div class="stcard soon"><div class="sc-ic">🎴</div><div><h3>ตู้ Demon Slayer</h3><p>ตู้เนื้อเรื่องดาบพิฆาตอสูร · เร็วๆนี้</p></div><button class="btn" type="button" disabled>เร็วๆนี้</button></div>';
 }
 function openShop(){
   if(!shopV.src)shopV.src=TEA_VID; if(!shopV2.src)shopV2.src=SH_VID; if(!shopV3.src)shopV3.src=SUN_VID; if(!shopV4.src)shopV4.src=KING_VID; if(!shopV5.src)shopV5.src='assets/gl_vid.mp4'; if(!shopV6.src)shopV6.src='assets/gojo_vid.mp4';
@@ -3599,15 +3658,65 @@ function openShop(){
 }
 function closeShop(){shopPage.classList.remove('open'); try{shopV.pause()}catch(e){} try{shopV2.pause()}catch(e){} try{shopV3.pause()}catch(e){} try{shopV4.pause()}catch(e){} try{shopV5.pause()}catch(e){} try{shopV6.pause()}catch(e){}}
 shopList.addEventListener('click',e=>{
-  const b=e.target.closest('button'); if(!b||b.disabled)return;
-  const k=CSK.find(x=>x.id===b.dataset.id); if(!k)return;
-  if(b.dataset.act==='buy'&&!cskOwned.includes(k.id)&&(k.cur==='gem'?gems:coins)>=k.price){if(k.cur==='gem')gems-=k.price; else coins-=k.price; sfx('coin'); cskOwned.push(k.id); skinSel[k.char]=k.id; saveGame(); renderShop()}
-  else if(b.dataset.act==='on'&&cskOwned.includes(k.id)){skinSel[k.char]=k.id; saveGame(); renderShop()}
-  else if(b.dataset.act==='off'){delete skinSel[k.char]; saveGame(); renderShop()}
+  const g=e.target.closest('[data-go]'); if(!g||g.disabled)return;
+  if(g.dataset.go==='mys')openMys(); else if(g.dataset.go==='gacha')openGacha();
 });
 $('shopBack').addEventListener('click',closeShop);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&shopPage.classList.contains('open'))closeShop()});
 
+
+
+/* ---------- skin page: anime -> character -> skins ---------- */
+const ANIME=[
+  {id:'rz',name:'Re:Zero',logo:'assets/logo_rz.webp',chars:['subaru']},
+  {id:'ds',name:'Demon Slayer',logo:'assets/logo_ds.webp',chars:['tanjiro']},
+  {id:'sl',name:'Solo Leveling',logo:'assets/logo_sl.webp',chars:['jin']},
+  {id:'jjk',name:'Jujutsu Kaisen',logo:'assets/logo_jjk.webp',chars:['gojo']}];
+let skNav={a:null,c:null};
+const skinPage=$('skinPage'), skinBody=$('skinBody');
+const SKV={greed:shopV,shadow:shopV2,sun:shopV3,king:shopV4,gluttony:shopV5,mugen:shopV6};
+function renderSkinPage(){
+  $('skinBack').textContent=(skNav.a||skNav.c)?'‹ ย้อนกลับ':'‹ กลับ';
+  let h='';
+  if(!skNav.a){
+    h='<div class="skBody"><p class="shsub">เลือกอนิเมะ</p><div class="skAnGrid">'+ANIME.map(an=>{
+      const n=an.chars.reduce((t,c)=>t+CSK.filter(k=>k.char===c).length,0);
+      return '<button type="button" class="skAnime" data-a="'+an.id+'"><span class="lg"><img alt="" src="'+an.logo+'"></span><b>'+an.name+'</b><small>'+an.chars.length+' ตัวละคร · '+n+' สกิน</small></button>';
+    }).join('')+'</div></div>';
+  }else if(!skNav.c){
+    const an=ANIME.find(x=>x.id===skNav.a);
+    h='<div class="skBody"><div class="skNavTop"><h3>'+an.name+'</h3><small>เลือกตัวละคร</small></div><div class="skChGrid">'+an.chars.map(c=>{
+      const n=CSK.filter(k=>k.char===c).length;
+      return '<button type="button" class="skChar" data-c="'+c+'"><div class="pimg">'+pkImg(c)+'</div><b>'+TYPES[c].name+'</b><small>'+n+' สกิน</small></button>';
+    }).join('')+'</div></div>';
+  }else{
+    const an=ANIME.find(x=>x.id===skNav.a);
+    h='<div class="skBody"><div class="skNavTop"><h3>'+TYPES[skNav.c].name+' · '+an.name+'</h3><small>สกินของตัวละคร</small></div>'+CSK.filter(k=>k.char===skNav.c).map(skCard).join('')+'</div>';
+  }
+  skinBody.innerHTML=h;
+  if(skNav.c){
+    skinBody.querySelectorAll('.sk').forEach(c=>{const v=SKV[c.dataset.id]; if(v)c.querySelector('.covv').appendChild(v)});
+    [[shopV,TEA_VID],[shopV2,SH_VID],[shopV3,SUN_VID],[shopV4,KING_VID],[shopV5,'assets/gl_vid.mp4'],[shopV6,'assets/gojo_vid.mp4']].forEach(([v,src])=>{if(!v.src)v.src=src});
+    skinBody.querySelectorAll('video').forEach(v=>{try{const p=v.play(); if(p&&p.catch)p.catch(()=>{})}catch(e){}});
+  }
+}
+function openSkinPage(){skNav={a:null,c:null}; renderSkinPage(); skinPage.classList.add('open'); skinPage.scrollTop=0}
+function closeSkinPage(){skinPage.classList.remove('open'); skinBody.querySelectorAll('video').forEach(v=>{try{v.pause()}catch(e){}})}
+skinBody.addEventListener('click',e=>{
+  const an=e.target.closest('[data-a]'); if(an){skNav.a=an.dataset.a; renderSkinPage(); skinPage.scrollTop=0; return}
+  const ch=e.target.closest('[data-c]'); if(ch){skNav.c=ch.dataset.c; renderSkinPage(); skinPage.scrollTop=0; return}
+  const b=e.target.closest('button[data-act]'); if(!b||b.disabled)return;
+  const k=CSK.find(x=>x.id===b.dataset.id); if(!k)return;
+  if(b.dataset.act==='buy'&&!cskOwned.includes(k.id)&&(k.cur==='gem'?gems:coins)>=k.price){if(k.cur==='gem')gems-=k.price; else coins-=k.price; sfx('coin'); cskOwned.push(k.id); skinSel[k.char]=k.id; saveGame(); renderSkinPage()}
+  else if(b.dataset.act==='on'&&cskOwned.includes(k.id)){skinSel[k.char]=k.id; saveGame(); renderSkinPage()}
+  else if(b.dataset.act==='off'){delete skinSel[k.char]; saveGame(); renderSkinPage()}
+});
+$('skinBack').addEventListener('click',()=>{
+  if(skNav.c){skNav.c=null; renderSkinPage(); skinPage.scrollTop=0}
+  else if(skNav.a){skNav.a=null; renderSkinPage(); skinPage.scrollTop=0}
+  else closeSkinPage();
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&skinPage.classList.contains('open'))closeSkinPage()});
 
 /* ---------- profile & bag ---------- */
 const profPage=$('profPage'), bagPage=$('bagPage'), pfPick=$('pfPick'), pfBody=$('pfBody'), bagBody=$('bagBody');
@@ -3623,7 +3732,6 @@ function mystOk(m){return Object.keys(m.need).every(id=>bagN(id)>=m.need[id])}
 function openMys(){renderMys(); mysPage.classList.add('open'); mysPage.scrollTop=0}
 function closeMys(){mysPage.classList.remove('open')}
 $('mysBack').addEventListener('click',closeMys);
-$('shopMys').addEventListener('click',openMys);
 const BAG_DEF={it_sukuna:{name:'นิ้วสาปสุคุนะ',icon:'🩸'},it_koku:{name:'ดวงตาจันทรา',icon:'🌙'},it_maho:{name:'เศษล้อธรรมะ',icon:'☸️'},it_aizen:{name:'ผีเสื้อวิญญาณ',icon:'🦋'},
   it_tojihair:{name:'ผมโทจิ',img:'assets/tk_tojihair.webp',icon:'💈'},it_soulsword:{name:'ดาบผ่าวิญญาณ',img:'assets/tk_soulsword.webp',icon:'🗡️'},it_soulworm:{name:'หนอนวิญญาณ',img:'assets/tk_soulworm.webp',icon:'🪱'}};
 /* อัตราดรอปต่อการชนะบอส 1 ครั้ง (0.07 = 7%) */
@@ -3748,11 +3856,12 @@ menuItems.forEach((el,i)=>{
     if(phase!=='menu')return;
     if(el.dataset.m==='bag'){openBag();return}
     if(el.dataset.m==='shop'){openShop();return}
+    if(el.dataset.m==='skin'){openSkinPage();return}
     if(el.classList.contains('soon')){el.classList.remove('nope'); void el.offsetWidth; el.classList.add('nope'); return}
     mode=el.dataset.m; startPick()});
 });
 document.addEventListener('keydown',e=>{
-  if(phase!=='menu'||codeModal.classList.contains('open')||skinModal.classList.contains('open')||shopPage.classList.contains('open')||profPage.classList.contains('open')||bagPage.classList.contains('open')||mysPage.classList.contains('open'))return;
+  if(phase!=='menu'||codeModal.classList.contains('open')||skinModal.classList.contains('open')||shopPage.classList.contains('open')||skinPage.classList.contains('open')||profPage.classList.contains('open')||bagPage.classList.contains('open')||mysPage.classList.contains('open'))return;
   if(e.key==='ArrowDown'||e.key==='ArrowRight'){setItem(mIdx+1);e.preventDefault()}
   else if(e.key==='ArrowUp'||e.key==='ArrowLeft'){setItem(mIdx-1);e.preventDefault()}
   else if((e.key==='Enter'||e.key===' ')&&document.activeElement!==menuItems[mIdx]){menuItems[mIdx].click();e.preventDefault()}
@@ -4320,7 +4429,6 @@ gachaBody.addEventListener('click',e=>{
   gPull(k.indexOf('1c')===0?1:10, k.slice(-1)==='c'?'coin':'gem');
 });
 $('gachaBack').addEventListener('click',closeGacha);
-$('shopGacha').addEventListener('click',openGacha);
 
 setItem(0);
 
