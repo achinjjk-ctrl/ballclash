@@ -2758,6 +2758,7 @@ function hideOverlay(){$('overlay').style.display='none'}
 function iconHTML(k){
   const t=TYPES[k];
   if(k==='zen'&&skinSel.zen==='thunder')return '<img class="av" alt="" src="assets/zen_sk_face.webp">';
+  if(k==='gojo'&&skinSel.gojo==='mugen')return '<img class="av" alt="" src="assets/gojo_mugface.webp">';
   if(t.img)return '<img class="av" alt="" src="'+(k==='glut'?IMGS.glut[0]:(k==='subaru'&&skinSel.subaru==='greed'?IMGS.sinsub:k==='subaru'&&skinSel.subaru==='gluttony'?IMGS.sgl:(k==='jin'&&skinSel.jin==='shadow'?IMGS.sjin:(k==='tanjiro'&&skinSel.tanjiro==='sun'?IMGS.sun:(k==='tanjiro'&&skinSel.tanjiro==='king'?IMGS.king:IMGS[k])))))+'">';
   return t.icon;
 }
@@ -3173,7 +3174,7 @@ function rkStep(b,dt){
   if(R.gunT>0)R.gunT-=dt; if(R.drT>0)R.drT-=dt; if(R.buffT>0)R.buffT-=dt;
 }
 function rkFire(b,tg,R){
-  R.gunT=0.7; R.aim=Math.atan2(tg.y-b.y,tg.x-b.x);
+  R.gunT=2; R.aim=Math.atan2(tg.y-b.y,tg.x-b.x);
   zFx.push({k:'seg',x1:b.x,y1:b.y,x2:tg.x,y2:tg.y,t:0.3,T:0.3});
   let B=null;
   for(let i=0;i<40&&!B;i++){
@@ -3188,20 +3189,21 @@ function rkFire(b,tg,R){
   ring(B.x,B.y,34,110,0.4,'120,255,80');
 }
 function rkWorld(dt){
-  for(let i=rkPortals.length-1;i>=0;i--){rkPortals[i].t-=dt; if(rkPortals[i].t<=0)rkPortals.splice(i,1)}
+  for(let i=rkPortals.length-1;i>=0;i--){rkPortals[i].t-=dt; if(rkPortals[i].cd>0)rkPortals[i].cd-=dt; if(rkPortals[i].t<=0)rkPortals.splice(i,1)}
   for(const b of balls){
     if(!b.alive||b.boss)continue;
     if(b.rkcd>0){b.rkcd-=dt; continue}
     for(const P of rkPortals){
       const own=P.owner;
+      if(P.cd>0)continue;
       if(b.team===own.team&&b!==own)continue;
       let hit=false;
       for(let i=0;i<2&&!hit;i++){
         const p=P.pts[i], q=P.pts[1-i];
         if(Math.hypot(b.x-p.x,b.y-p.y)<p.r+b.r*0.5){
-          b.x=q.x; b.y=q.y; b.rkcd=0.8; hit=true;
+          b.x=q.x; b.y=q.y; b.rkcd=0.8; hit=true; P.cd=1;
           ring(q.x,q.y,q.r,q.r*2.5,0.3,'120,255,80');
-          if(b.team!==own.team)hurt(b,5,own,true);
+          if(b.team!==own.team)hurt(b,10,own,true);
         }
       }
       if(hit)break;
@@ -3212,7 +3214,7 @@ function drawRickFX(){
   for(const P of rkPortals){
     const a=Math.min(1,P.t);
     for(const p of P.pts){
-      ctx.save(); ctx.globalAlpha=a; ctx.translate(p.x,p.y); ctx.rotate(animT*1.5);
+      ctx.save(); ctx.globalAlpha=a; ctx.translate(p.x,p.y);
       const im=RK_IM.portal; const h=p.r*2.6;
       if(im&&im.complete&&im.naturalWidth){const w=h*im.naturalWidth/im.naturalHeight; ctx.drawImage(im,-w/2,-h/2,w,h)}
       ctx.restore();
@@ -3844,7 +3846,7 @@ function skCard(k){
   else btn='<button class="btn buy'+(cur?' g':'')+'" data-act="buy" data-id="'+k.id+'" type="button"'+(bal>=k.price?'':' disabled')+'>'+ico+k.price.toLocaleString('en-US')+'</button>'+(bal>=k.price?'':'<span class="need">'+(cur?'เพชร':'เหรียญ')+'ไม่พอ (ขาดอีก '+(k.price-bal).toLocaleString('en-US')+')</span>');
   return '<article class="sk" data-id="'+k.id+'"><div class="cov"><div class="covv"></div><div class="covg"></div>'+
     '<div class="covt"><small>สกินของ '+k.who+'</small><h3>'+k.name+'</h3></div>'+
-    '<div class="covp">'+I.pv.map(u=>'<img alt="" src="'+u+'">').join('')+'</div></div>'+
+    '<div class="covp"><img alt="" src="'+IMGS[TYPES[k.char].img]+'"></div></div>'+
     '<div class="skb"><div class="bchips">'+I.chips.map(c=>'<span>'+c+'</span>').join('')+'</div>'+
     '<p style="margin:0;font-size:14px;line-height:1.6;color:#d3d8de">'+I.passive+'</p><h4>ความสามารถ</h4><ul>'+I.list.map(t=>'<li>'+t+'</li>').join('')+'</ul>'+
     '<div class="skact">'+btn+'</div></div></article>';
@@ -3911,15 +3913,15 @@ function renderSkinPage(){
   }
 }
 function openSkinPage(){skNav={a:null,c:null}; renderSkinPage(); skinPage.classList.add('open'); skinPage.scrollTop=0}
-function closeSkinPage(){skinPage.classList.remove('open'); skinBody.querySelectorAll('video').forEach(v=>{try{v.pause()}catch(e){}})}
+function closeSkinPage(){skinPage.classList.remove('open'); if(phase==='pick')renderPanel(); skinBody.querySelectorAll('video').forEach(v=>{try{v.pause()}catch(e){}})}
 skinBody.addEventListener('click',e=>{
   const an=e.target.closest('[data-a]'); if(an){skNav.a=an.dataset.a; renderSkinPage(); skinPage.scrollTop=0; return}
   const ch=e.target.closest('[data-c]'); if(ch){skNav.c=ch.dataset.c; renderSkinPage(); skinPage.scrollTop=0; return}
   const b=e.target.closest('button[data-act]'); if(!b||b.disabled)return;
   const k=CSK.find(x=>x.id===b.dataset.id); if(!k)return;
-  if(b.dataset.act==='buy'&&!cskOwned.includes(k.id)&&(k.cur==='gem'?gems:coins)>=k.price){if(k.cur==='gem')gems-=k.price; else coins-=k.price; sfx('coin'); cskOwned.push(k.id); skinSel[k.char]=k.id; saveGame(); renderSkinPage()}
-  else if(b.dataset.act==='on'&&cskOwned.includes(k.id)){skinSel[k.char]=k.id; saveGame(); renderSkinPage()}
-  else if(b.dataset.act==='off'){delete skinSel[k.char]; saveGame(); renderSkinPage()}
+  if(b.dataset.act==='buy'&&!cskOwned.includes(k.id)&&(k.cur==='gem'?gems:coins)>=k.price){if(k.cur==='gem')gems-=k.price; else coins-=k.price; sfx('coin'); cskOwned.push(k.id); skinSel[k.char]=k.id; saveGame(); renderSkinPage(); if(phase==='pick')renderPanel()}
+  else if(b.dataset.act==='on'&&cskOwned.includes(k.id)){skinSel[k.char]=k.id; saveGame(); renderSkinPage(); if(phase==='pick')renderPanel()}
+  else if(b.dataset.act==='off'){delete skinSel[k.char]; saveGame(); renderSkinPage(); if(phase==='pick')renderPanel()}
 });
 $('skinBack').addEventListener('click',()=>{
   if(skNav.c){skNav.c=null; renderSkinPage(); skinPage.scrollTop=0}
