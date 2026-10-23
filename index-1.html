@@ -998,7 +998,7 @@ function explode(b){
 }
 function loseHeart(b){
   if(b.mini||b.shadow||b.helper||b.conv||b.mimic)return;
-  if(b.pair&&b.pair.alive)return;
+  if(b.type==='morty')return;
   hearts[b.team-1][b.slot]=0; drawHearts();
 }
 function kill(b){
@@ -3254,7 +3254,7 @@ function rkShipsWorld(dt){
       S.x+=dx/d*step; S.y+=dy/d*step;
       if(d<tg.r+14)done=true;
     }
-    for(const r of S.riders){ if(!r.alive)continue; r.x=S.x; r.y=S.y; r.pin=0.2; r.inv=Math.max(r.inv,0.2); r.vx=0; r.vy=0 }
+    S.riders.forEach((r,i)=>{ if(!r.alive)return; const o=S.riders.length===1?0:(i?19:-19); r.x=S.x+Math.cos(S.ang)*o; r.y=S.y+Math.sin(S.ang)*o; r.pin=0.2; r.inv=Math.max(r.inv,0.2); r.vx=0; r.vy=0 });
     if(done){
       rkShips.splice(i,1);
       ring(S.x,S.y,40,130,0.5,'255,160,60'); shake(0.3,4);
@@ -3290,8 +3290,9 @@ function rkWorld(dt){
 function drawRickFX(){
   for(const S of rkShips){
     const im=RK_IM.ship; ctx.save(); ctx.translate(S.x,S.y); ctx.rotate(S.ang||0);
-    if(im&&im.complete&&im.naturalWidth)ctx.drawImage(im,-32,-18,64,36); else {ctx.fillStyle='#c8d6e0'; ctx.beginPath(); ctx.ellipse(0,0,30,12,0,0,6.283); ctx.fill()}
+    if(im&&im.complete&&im.naturalWidth)ctx.drawImage(im,-42,-23,84,46); else {ctx.fillStyle='#c8d6e0'; ctx.beginPath(); ctx.ellipse(0,0,40,18,0,0,6.283); ctx.fill()}
     ctx.restore();
+    for(const r of S.riders){ if(r.alive)drawBall(r,false) }
   }
   for(const P of rkPortals){
     const a=Math.min(1,P.t);
@@ -3850,6 +3851,7 @@ const shopV4=document.createElement('video'); shopV4.muted=true; shopV4.loop=tru
 shopV.muted=true; shopV.loop=true; shopV.playsInline=true; shopV.setAttribute('playsinline',''); shopV.setAttribute('muted',''); shopV.poster=TEA_POSTER;
 const SK_INFO={ricc:{
   pv:['assets/rick_sk_face.webp'],
+  cov:['assets/rick_sk_face.webp','assets/morty_face.webp'],
   chips:['HP 50 (เท่าเดิม)','ดาเมจชน 5 (เท่าเดิม)'],
   passive:'<b>พาสซีฟ:</b> พาสซีฟเดิมของริกใช้ได้ (ฟื้น HP 1%/วิ และโล่กันดาเมจทุก 15 วิ) · <b>เริ่มเกมจะมีมอตี้มาด้วย 1 ลูก</b> HP 40 ดาเมจชน 3 นับเป็นบอลหลักเหมือนริก · มอตี้เป็นโล่ให้ริกเสมอ รับดาเมจที่มากกว่า 6 แทนริก',
   list:[
@@ -3939,7 +3941,7 @@ function skCard(k){
   else btn='<button class="btn buy'+(cur?' g':'')+'" data-act="buy" data-id="'+k.id+'" type="button"'+(bal>=k.price?'':' disabled')+'>'+ico+k.price.toLocaleString('en-US')+'</button>'+(bal>=k.price?'':'<span class="need">'+(cur?'เพชร':'เหรียญ')+'ไม่พอ (ขาดอีก '+(k.price-bal).toLocaleString('en-US')+')</span>');
   return '<article class="sk" data-id="'+k.id+'"><div class="cov"><div class="covv"></div><div class="covg"></div>'+
     '<div class="covt"><small>สกินของ '+k.who+'</small><h3>'+k.name+'</h3></div>'+
-    '<div class="covp"><img alt="" src="'+IMGS[TYPES[k.char].img]+'"></div></div>'+
+    '<div class="covp">'+(on?(I.cov||I.pv).map(u=>'<img alt="" src="'+u+'">').join(''):'<img alt="" src="'+IMGS[TYPES[k.char].img]+'">')+'</div></div>'+
     '<div class="skb"><div class="bchips">'+I.chips.map(c=>'<span>'+c+'</span>').join('')+'</div>'+
     '<p style="margin:0;font-size:14px;line-height:1.6;color:#d3d8de">'+I.passive+'</p><h4>ความสามารถ</h4><ul>'+I.list.map(t=>'<li>'+t+'</li>').join('')+'</ul>'+
     '<div class="skact">'+btn+'</div></div></article>';
