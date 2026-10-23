@@ -3254,7 +3254,7 @@ function rkShipsWorld(dt){
       S.x+=dx/d*step; S.y+=dy/d*step;
       if(d<tg.r+14)done=true;
     }
-    S.riders.forEach((r,i)=>{ if(!r.alive)return; const o=S.riders.length===1?0:(i?19:-19); r.x=S.x+Math.cos(S.ang)*o; r.y=S.y+Math.sin(S.ang)*o; r.pin=0.2; r.inv=Math.max(r.inv,0.2); r.vx=0; r.vy=0 });
+    S.riders.forEach((r,i)=>{ if(!r.alive)return; const o=S.riders.length===1?0:(i?22:-22); r.x=S.x+Math.cos(S.ang)*o; r.y=S.y+Math.sin(S.ang)*o; r.pin=0.2; r.inv=Math.max(r.inv,0.2); r.vx=0; r.vy=0 });
     if(done){
       rkShips.splice(i,1);
       ring(S.x,S.y,40,130,0.5,'255,160,60'); shake(0.3,4);
@@ -3290,7 +3290,7 @@ function rkWorld(dt){
 function drawRickFX(){
   for(const S of rkShips){
     const im=RK_IM.ship; ctx.save(); ctx.translate(S.x,S.y); ctx.rotate(S.ang||0);
-    if(im&&im.complete&&im.naturalWidth)ctx.drawImage(im,-42,-23,84,46); else {ctx.fillStyle='#c8d6e0'; ctx.beginPath(); ctx.ellipse(0,0,40,18,0,0,6.283); ctx.fill()}
+    if(im&&im.complete&&im.naturalWidth)if(Math.cos(S.ang||0)<0)ctx.scale(1,-1); if(im&&im.complete&&im.naturalWidth)ctx.drawImage(im,-70,-40,140,80); else {ctx.fillStyle='#c8d6e0'; ctx.beginPath(); ctx.ellipse(0,0,64,34,0,0,6.283); ctx.fill()}
     ctx.restore();
     for(const r of S.riders){ if(r.alive)drawBall(r,false) }
   }
@@ -3880,6 +3880,7 @@ const SK_INFO={ricc:{
     '<b>Murasaki (ลูกม่วง)</b> ทุก 20 วิ ยิงไปจุดที่ศัตรูหนาแน่นที่สุด รัศมีกลาง-ใหญ่ 40 ดาเมจ และสตัน 1 วิ'
   ]
 },greed:{
+  pv:[IMGS.sinsub,IMGS.echi],
   chips:['HP 50 (เท่าเดิม)','ดาเมจชน 7 (เท่าเดิม)'],
   passive:'<b>พาสซีฟ:</b> เริ่มเกมจะมีบอล <b>เอคิน่า แม่มดแห่งความโลภ</b> (HP 50 ไม่มีดาเมจชน) เคลื่อนที่ตามสุบารุเสมอ',
   list:[
@@ -3941,7 +3942,7 @@ function skCard(k){
   else btn='<button class="btn buy'+(cur?' g':'')+'" data-act="buy" data-id="'+k.id+'" type="button"'+(bal>=k.price?'':' disabled')+'>'+ico+k.price.toLocaleString('en-US')+'</button>'+(bal>=k.price?'':'<span class="need">'+(cur?'เพชร':'เหรียญ')+'ไม่พอ (ขาดอีก '+(k.price-bal).toLocaleString('en-US')+')</span>');
   return '<article class="sk" data-id="'+k.id+'"><div class="cov"><div class="covv"></div><div class="covg"></div>'+
     '<div class="covt"><small>สกินของ '+k.who+'</small><h3>'+k.name+'</h3></div>'+
-    '<div class="covp">'+(on?(I.cov||I.pv).map(u=>'<img alt="" src="'+u+'">').join(''):'<img alt="" src="'+IMGS[TYPES[k.char].img]+'">')+'</div></div>'+
+    '<div class="covp">'+(I.cov||I.pv||[]).map(u=>'<img alt="" src="'+u+'">').join('')+'</div></div>'+
     '<div class="skb"><div class="bchips">'+I.chips.map(c=>'<span>'+c+'</span>').join('')+'</div>'+
     '<p style="margin:0;font-size:14px;line-height:1.6;color:#d3d8de">'+I.passive+'</p><h4>ความสามารถ</h4><ul>'+I.list.map(t=>'<li>'+t+'</li>').join('')+'</ul>'+
     '<div class="skact">'+btn+'</div></div></article>';
@@ -3983,6 +3984,7 @@ const ANIME=[
 let skNav={a:null,c:null};
 const skinPage=$('skinPage'), skinBody=$('skinBody');
 const SKV={greed:shopV,shadow:shopV2,sun:shopV3,king:shopV4,gluttony:shopV5,mugen:shopV6,thunder:shopV7,ricc:shopV8};
+function skTileImg(c){const k=CSK.find(x=>x.char===c); const I=k&&SK_INFO[k.id]; return (I&&(I.cov||I.pv)&&(I.cov||I.pv)[0])||IMGS[TYPES[c].img]}
 function renderSkinPage(){
   $('skinBack').textContent=(skNav.a||skNav.c)?'‹ ย้อนกลับ':'‹ กลับ';
   let h='';
@@ -3995,7 +3997,7 @@ function renderSkinPage(){
     const an=ANIME.find(x=>x.id===skNav.a);
     h='<div class="skBody"><div class="skNavTop"><h3>'+an.name+'</h3><small>เลือกตัวละคร</small></div><div class="skChGrid">'+an.chars.map(c=>{
       const n=CSK.filter(k=>k.char===c).length;
-      return '<button type="button" class="skChar" data-c="'+c+'"><div class="pimg">'+pkImg(c)+'</div><b>'+TYPES[c].name+'</b><small>'+n+' สกิน</small></button>';
+      return '<button type="button" class="skChar" data-c="'+c+'"><div class="pimg"><img alt="" src="'+skTileImg(c)+'"></div><b>'+TYPES[c].name+'</b><small>'+n+' สกิน</small></button>';
     }).join('')+'</div></div>';
   }else{
     const an=ANIME.find(x=>x.id===skNav.a);
