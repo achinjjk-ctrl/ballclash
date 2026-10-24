@@ -120,6 +120,11 @@ canvas{width:100%;height:100%;display:block;touch-action:none;border-radius:6px}
 #panel{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:3px;padding:10px;min-height:150px;
   -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .hint{font-size:15px;margin:2px 2px 8px;color:var(--ink)}
+.stbox{max-height:200px;overflow-y:auto;margin-top:10px;border-top:1px solid #1d232b;padding-top:6px}
+.strow{display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid #161b22}
+.stn{font-size:13px;min-width:92px;flex-shrink:0;padding-top:2px}
+.stcs{display:flex;flex-wrap:wrap;gap:4px}
+.stc{font-size:12px;border:1px solid;border-radius:6px;padding:1px 6px;line-height:1.5}
 .hint small{color:var(--dim);font-size:13px}
 #cards{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .card{background:rgba(26,30,36,.88);border:1px solid rgba(255,255,255,.16);border-radius:3px;padding:6px 2px 5px;text-align:center;
@@ -1047,6 +1052,48 @@ function kill(b){
 /* ---------- match stats (damage dealt / taken / healed) ---------- */
 let statDead=[];
 function stOf(b){return b.st||(b.st={d:0,t:0,h:0})}
+
+let stAcc=0;
+function stLabels(b){
+  const L=[]; const a=(t,c)=>L.push([t,c]);
+  if(b.stun>0)a('สตั้น','#ffd23f');
+  if(b.pin>0)a('ตรึง','#ffd23f');
+  if(b.hold>0||b.claw)a('ถูกจับ','#ffd23f');
+  if(b.pulledBy||b.pull>0)a('ถูกดึง','#c8a0ff');
+  if(b.chain)a('ถูกโซ่ล่าม','#c8a0ff');
+  if(b.bind)a('ผูกมัด','#c8a0ff');
+  if(b.slow>0)a('ช้าลง','#7fb8ff');
+  if(b.still>0)a('นิ่ง','#9ad0ff');
+  if(b.sbn>0)a('แผดเผา','#ff8a4a');
+  if(b.burn>0)a('ไหม้','#ff8a4a');
+  if(b.poison>0)a('พิษ','#7dff6a');
+  if(b.prey>0)a('ถูกล่า','#ff9ad0');
+  if(b.heavy>0)a('หนัก','#c8c8c8');
+  if(b.fear>0)a('หวาดกลัว','#c8c8ff');
+  if(b.wnd>0)a('บาดแผล','#ff7a7a');
+  if(b.thd&&b.thd.t>0)a('สายฟ้า','#ffe066');
+  if(b.slip>0)a('ไหลลื่น','#7fe0ff');
+  if(b.dbf)a('แรงกดดันจอมมาร','#b07aff');
+  if(b.awake)a('ตื่นรู้จุดอ่อน','#8fd3ff');
+  if(b.bar>0)a('วงกันดาเมจ','#9fd8ff');
+  if(b.rage)a('อาละวาด','#ff4a5e');
+  if(b.conv)a('ถูกเปลี่ยนฝ่าย','#ff6fa0');
+  if(b.rk&&b.rk.sh)a('โล่','#7fd0ff');
+  if(b.rk&&b.rk.buffT>0)a('เหล้า','#7dff6a');
+  if(b.tk&&b.tk.brT>0)a('พักหายใจ','#ffd23f');
+  if(b.inv>0)a('อมตะชั่วคราว','#ffffff');
+  return L;
+}
+function updStatusBox(){
+  const box=document.getElementById('stbox'); if(!box)return;
+  const rows=balls.filter(b=>b.alive&&!b.mini).map(b=>{
+    const L=stLabels(b);
+    const chips=L.length?L.map(([t,c])=>'<span class="stc" style="color:'+c+';border-color:'+c+'">'+t+'</span>').join(''):'<small style="color:#6b7480">ปกติ</small>';
+    return '<div class="strow"><b class="stn" style="color:'+(b.team===1?'#8fd3ff':'#ff8a8a')+'">'+esc(TYPES[b.type].name)+'</b><span class="stcs">'+chips+'</span></div>';
+  }).join('');
+  const html=rows||'<small style="color:#6b7480">ไม่มีบอลในสนาม</small>';
+  if(box.dataset.h!==html){box.innerHTML=html; box.dataset.h=html}
+}
 function stOwner(b){return (b.owner&&(b.shadow||b.helper))?b.owner:b}
 function statTick(){
   for(const b of balls){
@@ -2083,6 +2130,7 @@ function updBossBar(){
 }
 const CLAW_R=Math.sqrt(3)*34*2;
 function step(dt){
+  stAcc+=dt; if(stAcc>0.25){stAcc=0; updStatusBox()}
   let ts=timestop;
   if(ts&&!ts.owner.alive){timestop=null;ts=null}
   if(ts){ts.t-=dt;if(ts.t<=0){timestop=null;ts=null}}
@@ -2903,6 +2951,7 @@ function renderPanel(){
   }else if(phase==='battle'){
     h+='<div class="hint">กำลังสู้! <small>ครบ 10 วิ วงจะเริ่มบีบเป็นกำแพง ไม่ทำดาเมจ</small></div>';
     h+='<div class="row"><button class="btn alt" id="spd">เร็ว x'+speedMul+'</button><button class="btn alt" id="menu">ออกเมนู</button></div>';
+    h+='<div class="stbox" id="stbox"></div>';
   }else if(phase==='over'){
     h+='<div class="hint res'+lastW+'">'+(lastW===1?'🏆 ชนะ!':lastW===2?'💀 แพ้':'🤝 เสมอ')+(mode==='test'?' · โหมดทดสอบ ไม่ได้รับรางวัล':' · ได้ '+coinSVG+'<b>+'+lastReward+'</b> เหรียญ'+(lastGem?' · '+gemSVG+'<b>+'+lastGem+'</b> เพชร'+(lastGemFirst?' (ครั้งแรก!)':''):''))+'</div>'+statsHTML()+'<div class="row"><button class="btn alt" id="menu">เปลี่ยนโหมด</button><button class="btn" id="again">เล่นอีกครั้ง</button></div>';
   }
