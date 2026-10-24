@@ -627,8 +627,9 @@ ctx.setTransform(dpr,0,0,dpr,0,0);
 
 const IM={};
 IMGS.rick='assets/rick_face.webp';
+IMGS.rimuruSk='assets/rimuru_sk_face.webp';
 IMGS.morty='assets/morty_face.webp'; IMGS.rickSk='assets/rick_sk_face.webp';
-['kira','subaru','note','jin','shh','shd','sha','swd','bolt','gojo','gojo2','dom','dio','ell','sold','roller','bullet','wk','stf','shin','hak','naoya','tanjiro','sinsub','echi','toji','zen','sgl','shura','rimuru','rick','morty','rickSk'].forEach(k=>{const i=new Image();i.src=IMGS[k];IM[k]=i});
+['kira','subaru','note','jin','shh','shd','sha','swd','bolt','gojo','gojo2','dom','dio','ell','sold','roller','bullet','wk','stf','shin','hak','naoya','tanjiro','sinsub','echi','toji','zen','sgl','shura','rimuru','rick','morty','rickSk','rimuruSk'].forEach(k=>{const i=new Image();i.src=IMGS[k];IM[k]=i});
 IM.glut=IMGS.glut.map(s=>{const i=new Image();i.src=s;return i});
 const TWI={sw:new Image(),wh:new Image(),dr:new Image()}; TWI.sw.src='assets/sw.webp'; TWI.wh.src='assets/wh.webp'; TWI.dr.src='assets/dr.webp';
 IM.sukuna=new Image(); IM.sukuna.src='assets/sukuna.jpg';
@@ -888,7 +889,7 @@ const FREE=['kira','subaru','glut','ell','zen'], PRICE={rimuru:100,jin:80,dio:10
 let coins=0, unlocked=FREE.slice(), lastReward=0, lastW=0, redeemed=[], gems=0, bossWon=[], lastGem=0, lastGemFirst=false, lastItem='';
 const CODES={'2ewsozg64j0':{items:[{id:'it_tojihair',n:5},{id:'it_soulsword',n:1},{id:'it_soulworm',n:4}]},'1gq4z52oc55':1000000,'24zgmdixxtm':{coins:20000,gems:100},'nhdaxhyhtx':{coins:0,gems:1000},'2gkobl24sq7':{coins:0,gems:10000}};
 const GEMS={redwan:{n:5,first:10},sukuna:{n:2,first:5},kokushibo:{n:5,first:20},mahoraga:{n:5,first:10},aizen:{n:20,first:50}};
-const CSK=[{id:'gluttony',char:'subaru',who:'สุบารุ',name:'บาปแห่งความตะกละ',price:20000},{id:'greed',char:'subaru',who:'สุบารุ',name:'บาปแห่งความโลภ',price:10000},{id:'sun',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'ระบำเทพสุริยัน',price:15000},{id:'king',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'การตื่นขึ้นของราชันย์อสูร',price:350,cur:'gem'},{id:'shadow',char:'jin',who:'ซองจินอู',name:'จักรพรรดิเงา',price:10000},{id:'mugen',char:'gojo',who:'โกโจ ซาโตรุ',name:'อัจฉริยะไสยเวทย์',price:20000},{id:'thunder',char:'zen',who:'เซน อิทซึ',name:'สุดยอดปรานอัสนี',price:15000},{id:'ricc',char:'rick',who:'ริก ซานเชซ',name:'Ricc and Morty',price:888,cur:'gem'}];
+const CSK=[{id:'gluttony',char:'subaru',who:'สุบารุ',name:'บาปแห่งความตะกละ',price:20000},{id:'greed',char:'subaru',who:'สุบารุ',name:'บาปแห่งความโลภ',price:10000},{id:'sun',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'ระบำเทพสุริยัน',price:15000},{id:'king',char:'tanjiro',who:'ทันจิโร่ คามาโดะ',name:'การตื่นขึ้นของราชันย์อสูร',price:350,cur:'gem'},{id:'shadow',char:'jin',who:'ซองจินอู',name:'จักรพรรดิเงา',price:10000},{id:'mugen',char:'gojo',who:'โกโจ ซาโตรุ',name:'อัจฉริยะไสยเวทย์',price:20000},{id:'thunder',char:'zen',who:'เซน อิทซึ',name:'สุดยอดปรานอัสนี',price:15000},{id:'ricc',char:'rick',who:'ริก ซานเชซ',name:'Ricc and Morty',price:888,cur:'gem'},{id:'rafael',char:'rimuru',who:'ริมุรุ',name:'ราฟาเอลเทพแห่งการตื่นรู้',price:1000,cur:'gem'}];
 let cskOwned=[], skinSel={};
 let profile={name:'ผู้เล่น',title:'',avatar:'',show:[null,null,null],fav:''}, bag=[], mystOwned=[];
 try{const sv=JSON.parse(localStorage.getItem('ballclash.save')||'null'); if(sv){const pf=sv.profile||{}; profile={name:String(pf.name||'ผู้เล่น').slice(0,16),title:String(pf.title||'').slice(0,24),avatar:typeof pf.avatar==='string'&&pf.avatar.indexOf('data:image/')===0?pf.avatar:'',show:[0,1,2].map(i=>pf.show&&pf.show[i]&&typeof pf.show[i].k==='string'?{k:pf.show[i].k,s:pf.show[i].s||''}:null),fav:String(pf.fav||'')}; mystOwned=Array.isArray(sv.myst)?sv.myst.filter(x=>typeof x==='string'):[]; bag=Array.isArray(sv.bag)?sv.bag.filter(x=>x&&typeof x.id==='string').map(x=>({id:x.id,n:Math.max(1,x.n|0)})):[]; coins=Math.max(0,sv.coins|0); gems=Math.max(0,sv.gems|0); bossWon=(sv.bossWon||[]).filter(k=>GEMS[k]); unlocked=FREE.concat((sv.unlocked||[]).filter(k=>PRICE[k]||PGEM[k]||k==='toji')); redeemed=(sv.redeemed||[]).filter(h=>CODES[h]); ownedSkins=['default'].concat((sv.skins||[]).filter(id=>SKINS.some(k=>k.id===id&&k.price>0))); skinOn=ownedSkins.includes(sv.skin)?sv.skin:'default'; cskOwned=(sv.cskins||[]).filter(id=>CSK.some(k=>k.id===id)); if(sv.skinSel){for(const c in sv.skinSel){const id=sv.skinSel[c], kk=CSK.find(x=>x.id===id); if(kk&&kk.char===c&&cskOwned.includes(id))skinSel[c]=id}}else if(cskOwned.includes(sv.cskOn))skinSel.subaru=sv.cskOn}}catch(e){}
@@ -944,6 +945,7 @@ function bossOf(){return balls.find(x=>x.boss&&x.alive)||true}
 function hurt(t,amt,src,noFx,rg){
   if(!t.alive||t.inv>0||t.bar>0)return;
   if(src&&src!==t&&src.air>0)return;
+  if(src&&src!==t&&src.slip>0&&!noFx)return;
   if(t.rk&&t.rk.sh&&amt>0){t.rk.sh=false; ring(t.x,t.y,t.r,t.r*3,0.4,'120,200,255'); texts.push({x:t.x,y:t.y-t.r-14,t:1,txt:'โล่กัน!',col:'#7fd0ff'}); return}
   if(t.skin==='ricc'&&t.pair&&t.pair.alive&&!(t.pair.pin>0)&&amt>6&&src!==t.pair){
     const m=t.pair;
@@ -954,6 +956,7 @@ function hurt(t,amt,src,noFx,rg){
   if(src&&src.skin==='mugen'&&src.bar>0)amt*=0.5;
   if(src&&src.rk&&src.rk.buffT>0)amt*=noFx?(src.rk.skinBuff?1.3:1.4):2;
   if(t.tk&&t.tk.brT>0)amt*=0.5;
+  if(t.dbf)amt*=1.2;
   if(src&&src.skin==='thunder'&&src.type==='zen'&&src!==t&&amt>0&&!(t.tk&&t.tk.brT>0))t.thd={t:3,c:1};
   if(t.type==='redwan'&&src&&src!==t&&['tanjiro','sha','toji','zen'].includes(src.type))return;
   if(t.type==='toji'&&t.tj&&t.tj.dodge&&amt>0&&src){t.tj.dodge=false; texts.push({x:t.x,y:t.y-t.r-12,t:0.8,txt:'หลบ!',col:'#9fd0ff'}); return}
@@ -965,6 +968,7 @@ function hurt(t,amt,src,noFx,rg){
   if(t.wnd>0)amt*=1.5;
   if(t.kpas&&kAbn(t))amt*=KG.XMUL;
   if(src&&src.heavy>0)amt*=0.3;
+  if(src&&src.awake&&rafHasBuff(src))amt*=0.2;
   if(src){if(src.fear>0)amt*=0.6; const so=stOwner(src); if(so&&so.dmul)amt*=so.dmul}
   if(src&&src.skin&&src.type==='subaru'&&tea&&tea.t>0)amt*=2;
   if(t.skin&&t.type==='subaru'&&t.deaths>0&&src!==t){amt-=t.deaths; if(amt<=0){texts.push({x:t.x,y:t.y-t.r,t:0.7,txt:'0',col:'#d8c8ff'});return}}
@@ -1002,6 +1006,8 @@ function loseHeart(b){
   hearts[b.team-1][b.slot]=0; drawHearts();
 }
 function kill(b){
+  if(!b.ghost&&!b.mini){const R=balls.find(x=>x.alive&&x.skin==='rafael'&&x.team===b.team&&x!==b); if(R){R.hp=Math.min(R.max,R.hp+60); ring(R.x,R.y,R.r,R.r*2.5,0.4,'143,211,255'); texts.push({x:R.x,y:R.y-R.r-14,t:1,txt:'พันธมิตรตาย! +60 HP',col:'#8fd3ff'})}}
+  if(b.awake&&!b.ghost)rafAbsorb(b);
   if(b.boss){endSdom(); afx=[]; fugas=[]; cuts=[]; moons=[]; ksw=[]; for(const e of balls){e.pin=0;e.kb=null}}
   if(b.helper&&b.type==='echi'){
     if(tea&&tea.t>0){b.hp=Math.max(1,b.hp);return}
@@ -2260,7 +2266,8 @@ function step(dt){
     if(b.type==='rick')rkStep(b,dt);
     if(b.type==='morty')mortyStep(b,dt);
     if(b.type==='shura')shuraStep(b,dt);
-    if(b.type==='rimuru')rimStep(b,dt);
+    if(b.type==='rimuru'){if(b.skin==='rafael')rafStep(b,dt); else rimStep(b,dt);}
+    if(b.ghost){b.ghostT-=dt; if(b.ghostT<=0){b.alive=false; ring(b.x,b.y,b.r,b.r*2,0.4,'143,211,255'); continue}}
     if(b.type==='subaru'&&b.skin==='gluttony')gluttonyStep(b,dt);
     if(b.type==='hak'){
       b.cd-=dt;
@@ -2497,7 +2504,7 @@ function step(dt){
     }
     soldiers=soldiers.filter(q=>q.life>0);
   }
-  if(!ts){bossWorld(dt); naoyaWorld(dt); tanjiroWorld(dt); sunWorld(dt); kingWorld(dt); skinWorld(dt); redWorld(dt); rimWorld(dt); gjWorld(dt); thWorld(dt); rkWorld(dt)}
+  if(!ts){bossWorld(dt); naoyaWorld(dt); tanjiroWorld(dt); sunWorld(dt); kingWorld(dt); skinWorld(dt); redWorld(dt); rimWorld(dt); gjWorld(dt); thWorld(dt); rkWorld(dt); rafWorld(dt)}
   if(domain&&!ts){
     domain.t-=dt; const o=domain.owner;
     if(domain.t<=0||!o.alive){domain=null;for(const e of balls)e.stun=0}
@@ -2603,7 +2610,7 @@ function duelEnd(a1,a2){
   setTimeout(()=>{if(phase==='duelend'){hideOverlay();nextDuel(a1,a2)}},1500);
 }
 function nextDuel(a1,a2){
-  statDead=statDead.concat(balls.filter(b=>!b.alive&&!b.shadow&&!b.helper&&!b.mini&&!b.boss)); balls=balls.filter(b=>b.alive&&!b.shadow); texts=[]; bolts=[]; shots=[]; gjOrbs=[]; rkPortals=[]; rkShips.length=0; pc={}; domain=null; timestop=null; soldiers=[]; balls.forEach(b=>{b.stun=0});
+  statDead=statDead.concat(balls.filter(b=>!b.alive&&!b.shadow&&!b.helper&&!b.mini&&!b.boss)); balls=balls.filter(b=>b.alive&&!b.shadow); texts=[]; bolts=[]; shots=[]; gjOrbs=[]; rkPortals=[]; rkShips.length=0; rafZones.length=0; pc={}; domain=null; timestop=null; soldiers=[]; balls.forEach(b=>{b.stun=0});
   nghosts=[]; twfx=[]; sunfx=[]; kfx=[]; balls.forEach(b=>{b.kg=null;b.wnd=0;b.fear=0;b.kgd=0;b.sun=null;b.still=0;b.sdash=null;b.sbn=0;b.spinA=0;b.tw=null;b.nmove=null;b.nd=7;b.nw=12;b.nsT=0;if(b.type==='jin'){b.summoned=0;b.beru=null;b.ig=null;if(b.skin)b.cd=10}if(b.type==='ell'){b.summoned=0;b.cd=5}
     if(b.orig==='shin'){b.type='shin';b.copied=false;b.copyT=5;b.r=21;b.spd=150;b.cd=0;b.bar=0;b.lives=0;b.summoned=0;b.chain=null;b.dash=0;b.dashT=null;b.jp=0;b.rush=null}});
   for(const b of balls){
@@ -2671,6 +2678,10 @@ function applySkinTo(b){
   if(mine&&b.type==='jin'&&skinSel.jin==='shadow'){b.skin='shadow'; b.cd=10; b.beru=null; b.ig=null; return}
   if(mine&&b.type==='zen'&&skinSel.zen==='thunder'){b.skin='thunder'; b.spd*=2.5; b.tk={now:0,s1:5,s2:11,br:7,brT:0,trail:[],lcd:new Map(),sq:null}; return}
   if(mine&&b.type==='gojo'&&skinSel.gojo==='mugen'){b.skin='mugen'; b.gjc={ak:10,ao:8,mu:20,rc:20}; return}
+  if(mine&&b.type==='rimuru'&&skinSel.rimuru==='rafael'){
+    b.skin='rafael'; b.max*=2.5; b.hp=b.max; b.atk*=2.5; b.baseSpd=b.spd;
+    b.rf={t:0,wT:8,sT:14,absorbed:false,target:null,dbOn:false,slime:null,hopT:0}; return
+  }
   if(mine&&b.type==='rick'&&skinSel.rick==='ricc'){
     b.skin='ricc'; b.rk={sh:false,shCd:15,gunCd:10,gunT:0,drT:0,drCd:7,aim:0,buffT:0,skinBuff:false,beamCd:13,medCd:9,shipCd:20};
     const side=b.x>W/2?-1:1, mx=Math.min(W-M-21,Math.max(M+21,b.x+side*(b.r+21+6)));
@@ -2754,7 +2765,7 @@ function finishPlace(){
   phase='count'; count=2.4; renderPanel();
 }
 function startBattle(){
-  sfx('start'); phase='battle'; resetBoss(); try{rimStart()}catch(e){} battleT=0; T=0; pc={}; shots=[]; gjOrbs=[]; rkPortals=[]; rkShips.length=0; soldiers=[]; domain=null; timestop=null;
+  sfx('start'); phase='battle'; resetBoss(); try{rimStart()}catch(e){} battleT=0; T=0; pc={}; shots=[]; gjOrbs=[]; rkPortals=[]; rkShips.length=0; rafZones.length=0; soldiers=[]; domain=null; timestop=null;
   for(const b of balls){b.vx=b.dx*b.spd;b.vy=b.dy*b.spd}
   applyBuffs();
   renderPanel();
@@ -2776,6 +2787,7 @@ function iconHTML(k){
   if(k==='zen'&&skinSel.zen==='thunder')return '<img class="av" alt="" src="assets/zen_sk_face.webp">';
   if(k==='gojo'&&skinSel.gojo==='mugen')return '<img class="av" alt="" src="assets/gojo_mugface.webp">';
   if(k==='rick'&&skinSel.rick==='ricc')return '<img class="av" alt="" src="assets/rick_sk_face.webp">';
+  if(k==='rimuru'&&skinSel.rimuru==='rafael')return '<img class="av" alt="" src="assets/rimuru_sk_face.webp">';
   if(t.img)return '<img class="av" alt="" src="'+(k==='glut'?IMGS.glut[0]:(k==='subaru'&&skinSel.subaru==='greed'?IMGS.sinsub:k==='subaru'&&skinSel.subaru==='gluttony'?IMGS.sgl:(k==='jin'&&skinSel.jin==='shadow'?IMGS.sjin:(k==='tanjiro'&&skinSel.tanjiro==='sun'?IMGS.sun:(k==='tanjiro'&&skinSel.tanjiro==='king'?IMGS.king:IMGS[k])))))+'">';
   return t.icon;
 }
@@ -2962,7 +2974,7 @@ function face(b){
   const d=TYPES[b.type];
   if(b.type==='toji'&&!b.mini){const v=tjVid(); if(v.readyState>=2&&v.videoWidth){ctx.save(); ctx.beginPath(); ctx.arc(b.x,b.y,b.r-4,0,6.283); ctx.clip(); ctx.drawImage(v,b.x-b.r+4,b.y-b.r+4,(b.r-4)*2,(b.r-4)*2); ctx.restore(); return}}
   if(d.img&&!b.mini){
-    const im=d.img==='glut'?IM.glut[Math.floor(animT*8)%IM.glut.length]:((b.type==='gojo'&&domain&&domain.owner===b&&domain.t>0)?IM.gojo2:(b.skin==='mugen'&&b.type==='gojo')?IM.mugface:(b.skin==='thunder'&&b.type==='zen')?IM.zenSk:(b.skin==='ricc'&&b.type==='rick')?IM.rickSk:IM[(b.skin==='greed'&&b.type==='subaru')?'sinsub':(b.skin==='gluttony'&&b.type==='subaru')?'sgl':(b.skin==='shadow'&&b.type==='jin'?'sjin':(b.skin==='sun'&&b.type==='tanjiro'?'sun':(b.skin==='king'&&b.type==='tanjiro'?'king':d.img)))]);
+    const im=d.img==='glut'?IM.glut[Math.floor(animT*8)%IM.glut.length]:((b.type==='gojo'&&domain&&domain.owner===b&&domain.t>0)?IM.gojo2:(b.skin==='mugen'&&b.type==='gojo')?IM.mugface:(b.skin==='thunder'&&b.type==='zen')?IM.zenSk:(b.skin==='ricc'&&b.type==='rick')?IM.rickSk:(b.skin==='rafael'&&b.type==='rimuru')?(b.rf&&b.rf.slime?IM.rimuru:IM.rimuruSk):IM[(b.skin==='greed'&&b.type==='subaru')?'sinsub':(b.skin==='gluttony'&&b.type==='subaru')?'sgl':(b.skin==='shadow'&&b.type==='jin'?'sjin':(b.skin==='sun'&&b.type==='tanjiro'?'sun':(b.skin==='king'&&b.type==='tanjiro'?'king':d.img)))]);
     const rr=b.r-4;
     if(im&&im.complete&&im.naturalWidth){
       ctx.save(); ctx.beginPath(); ctx.arc(b.x,b.y,rr,0,6.283); ctx.clip();
@@ -3216,7 +3228,7 @@ function beamFire(b,tg,dmg){
   ring(b.x,b.y,b.r,b.r*3,0.3,'255,230,120'); shake(0.15,2);
 }
 function shipLaunch(owner){
-  const tg=gjTarget(owner); if(!tg)return false;
+  const tg=thNearest(owner); if(!tg)return false;
   const riders=[owner]; if(owner.pair&&owner.pair.alive)riders.push(owner.pair);
   rkShips.push({owner,riders,x:owner.x,y:owner.y,ang:0,t:0,tg:tg});
   texts.push({x:owner.x,y:owner.y-owner.r-16,t:1.1,txt:'ขึ้นยาน!',col:'#9be3c8'});
@@ -3243,7 +3255,7 @@ function mortyStep(b,dt){
 function rkShipsWorld(dt){
   for(let i=rkShips.length-1;i>=0;i--){
     const S=rkShips[i]; S.t+=dt;
-    if(!S.tg||!S.tg.alive){S.tg=gjTarget(S.owner)}
+    if(!S.tg||!S.tg.alive){S.tg=thNearest(S.owner)}
     const tg=S.tg;
     let done=false;
     if(!tg||S.t>4){done=true}
@@ -3262,6 +3274,68 @@ function rkShipsWorld(dt){
       texts.push({x:S.x,y:S.y-24,t:1,txt:'ระเบิด! 15',col:'#ffb070'});
       for(const r of S.riders){ r.pin=0 }
     }
+  }
+}
+
+const rafZones=[];
+function rafHasBuff(e){ return !!((e.rk&&(e.rk.buffT>0||e.rk.sh))||(e.tk&&e.tk.brT>0)||e.bar>0||e.rage||(e.dmul&&e.dmul>1)) }
+function rafWaterBurst(b){
+  ring(W/2,H/2,20,W,0.9,'120,190,255');
+  texts.push({x:b.x,y:b.y-b.r-14,t:1.2,txt:'ฝนน้ำ!',col:'#8fd3ff'});
+  for(const e of balls){ if(!e.alive||e.team===b.team||e.shadow)continue; hurt(e,8,b,true); e.slip=Math.max(e.slip||0,4) }
+}
+function rafAbsorb(b){
+  const R=balls.find(x=>x.alive&&x.skin==='rafael'&&x.team!==b.team);
+  if(!R||R.rf.absorbed||b.boss||b.mini||b.helper||b.shadow)return;
+  R.rf.absorbed=true;
+  const g=mk(b.type,R.team,b.x,b.y,0,1,false,0);
+  g.helper=true; g.owner=R; g.ghost=true; g.ghostT=4;
+  balls.push(g);
+  ring(b.x,b.y,b.r,b.r*4,0.6,'143,211,255');
+  texts.push({x:R.x,y:R.y-R.r-14,t:1.8,txt:'กลืนกิน: '+TYPES[b.type].name,col:'#8fd3ff'});
+}
+function rafStep(b,dt){
+  const F=b.rf;
+  if(!F.target){
+    const tg=thNearest(b);
+    if(tg){F.target=tg; tg.awake=true; ring(tg.x,tg.y,tg.r,tg.r*3,0.5,'143,211,255'); texts.push({x:tg.x,y:tg.y-tg.r-14,t:1.6,txt:'ตื่นรู้จุดอ่อน!',col:'#8fd3ff'})}
+  }
+  F.wT-=dt; if(F.wT<=0){F.wT=8; rafWaterBurst(b)}
+  F.sT-=dt; if(F.sT<=0&&!F.slime){F.sT=14; F.slime={hops:0,hT:0}; texts.push({x:b.x,y:b.y-b.r-14,t:1.2,txt:'เปลี่ยนร่างเป็นสไลม์!',col:'#8fd3ff'})}
+  if(F.slime){
+    const S=F.slime; S.hT-=dt;
+    if(S.hT<=0){
+      if(S.hops>=4){F.slime=null}
+      else{
+        S.hops++; S.hT=0.6;
+        const a=Math.random()*6.283; b.dx=Math.cos(a); b.dy=Math.sin(a); F.hopT=0.3;
+        rafZones.push({owner:b,x:b.x,y:b.y,r:34,t:5,cd:0});
+      }
+    }
+  }
+  if(F.hopT>0){F.hopT-=dt; b.spd=340} else b.spd=b.baseSpd;
+}
+function rafWorld(dt){
+  for(const e of balls){ if(e.slip>0)e.slip-=dt }
+  for(let i=rafZones.length-1;i>=0;i--){
+    const Z=rafZones[i]; Z.t-=dt; Z.cd-=dt;
+    if(Z.cd<=0){
+      Z.cd=0.5;
+      for(const e of balls){ if(!e.alive||e.shadow||(Z.owner&&e.team===Z.owner.team))continue; if(Math.hypot(e.x-Z.x,e.y-Z.y)<Z.r+e.r){hurt(e,7,Z.owner,true); e.slip=4} }
+    }
+    if(Z.t<=0)rafZones.splice(i,1);
+  }
+  for(const R of balls){
+    if(!R.alive||R.skin!=='rafael'||!R.rf)continue;
+    R.rf.t=(R.rf.t||0)+dt;
+    if(R.rf.t>=10)R.rf.dbOn=true;
+    for(const e of balls){ e.dbf=!!(R.rf.dbOn&&e.team!==R.team) }
+  }
+}
+function drawRafFX(){
+  for(const Z of rafZones){
+    const a=Math.min(1,Z.t);
+    ctx.save(); ctx.globalAlpha=0.35*a; ctx.fillStyle='#78beff'; ctx.beginPath(); ctx.arc(Z.x,Z.y,Z.r,0,6.283); ctx.fill(); ctx.restore();
   }
 }
 function rkWorld(dt){
@@ -3532,7 +3606,7 @@ function drawGjFX(){
     ctx.restore();
   }
 }
-function drawBossFX(){ drawRickFX(); drawThunderFX(); drawGjFX(); drawZenFX(); drawGluttonyFX(); drawRedFX(); drawRimFX();
+function drawBossFX(){ drawRafFX(); drawRickFX(); drawThunderFX(); drawGjFX(); drawZenFX(); drawGluttonyFX(); drawRedFX(); drawRimFX();
   drawTojiFX();
   drawTanjiroFX();
   drawSunFX();
@@ -3846,10 +3920,21 @@ const shopV5=document.createElement('video'); shopV5.muted=true; shopV5.loop=tru
 const shopV6=document.createElement('video'); shopV6.muted=true; shopV6.loop=true; shopV6.playsInline=true; shopV6.setAttribute('playsinline',''); shopV6.setAttribute('muted',''); shopV6.poster='assets/gojo_poster.webp';
 const shopV7=document.createElement('video'); shopV7.muted=true; shopV7.loop=true; shopV7.playsInline=true; shopV7.setAttribute('playsinline',''); shopV7.setAttribute('muted',''); shopV7.poster='assets/zen_sk_poster.webp';
 const shopV8=document.createElement('video'); shopV8.muted=true; shopV8.loop=true; shopV8.playsInline=true; shopV8.setAttribute('playsinline',''); shopV8.setAttribute('muted',''); shopV8.poster='assets/ricc_poster.webp';
+const shopV9=document.createElement('video'); shopV9.muted=true; shopV9.loop=true; shopV9.playsInline=true; shopV9.setAttribute('playsinline',''); shopV9.setAttribute('muted',''); shopV9.poster='assets/rafael_poster.webp';
 const shopV3=document.createElement('video'); shopV3.muted=true; shopV3.loop=true; shopV3.playsInline=true; shopV3.setAttribute('playsinline',''); shopV3.setAttribute('muted',''); shopV3.poster=SUN_POSTER;
 const shopV4=document.createElement('video'); shopV4.muted=true; shopV4.loop=true; shopV4.playsInline=true; shopV4.setAttribute('playsinline',''); shopV4.setAttribute('muted',''); shopV4.poster=KING_POSTER;
 shopV.muted=true; shopV.loop=true; shopV.playsInline=true; shopV.setAttribute('playsinline',''); shopV.setAttribute('muted',''); shopV.poster=TEA_POSTER;
-const SK_INFO={ricc:{
+const SK_INFO={rafael:{
+  pv:['assets/rimuru_sk_face.webp'],
+  chips:['HP และดาเมจชน +150%','ตื่นรู้เป้าหมายแรก'],
+  passive:'<b>พาสซีฟ การตื่นรู้จากราฟาเอล:</b> เริ่มเกมริมุรุตื่นรู้จุดอ่อนของศัตรู 1 เป้า (ใกล้ที่สุด) เมื่อเป้านั้นมีบัฟ ดาเมจที่มันทำได้ลด 80% และริมุรุเพิ่ม HP และดาเมจชน 150%',
+  list:[
+    '<b>เมื่อครบ 10 วิ แรงกดดันจอมมาร:</b> ศัตรูทุกตัวรับดาเมจเพิ่ม 20% จากทุกแหล่ง',
+    '<b>ทุกครั้งที่พันธมิตรตาย</b> (รวมสุบารุทุกชีวิตและบอลอัญเชิญ) ริมุรุฟื้น HP 60',
+    '<b>กลืนกินเป้าที่ตื่นรู้:</b> ครั้งแรกที่เป้านั้นตาย ริมุรุกลืนกินและปลดปล่อยสกิลของเป้านั้นออกมา 1 ครั้ง (เป็นบอลจำลอง 4 วิ)',
+    '<b>ทุก 8 วิ ฝนน้ำยักษ์:</b> ระเบิดทั่วแมป ดาเมจ 8 ศัตรูทุกตัวติดสถานะไหลลื่น 4 วิ (ทำดาเมจกระเด้งไม่ได้)',
+    '<b>ทุก 14 วิ เปลี่ยนร่างเป็นสไลม์:</b> กระโดดสุ่มทิศ 4 ครั้ง ทุกครั้งสร้างพื้นน้ำ ศัตรูที่เข้าโดนรับดาเมจ 7 และติดไหลลื่น 4 วิ'
+  ]},ricc:{
   pv:['assets/rick_sk_face.webp'],
   cov:['assets/rick_sk_face.webp','assets/morty_face.webp'],
   chips:['HP 50 (เท่าเดิม)','ดาเมจชน 5 (เท่าเดิม)'],
@@ -3980,11 +4065,12 @@ const ANIME=[
   {id:'ds',name:'Demon Slayer',logo:'assets/logo_ds.webp',chars:['tanjiro','zen']},
   {id:'sl',name:'Solo Leveling',logo:'assets/logo_sl.webp',chars:['jin']},
   {id:'jjk',name:'Jujutsu Kaisen',logo:'assets/logo_jjk.webp',chars:['gojo']},
-  {id:'rm',name:'Rick and Morty',logo:'assets/logo_rm.webp',chars:['rick']}];
+  {id:'rm',name:'Rick and Morty',logo:'assets/logo_rm.webp',chars:['rick']},
+  {id:'tensura',name:'That Time I Got Reincarnated as a Slime',logo:'assets/logo_tensura.webp',chars:['rimuru']}];
 let skNav={a:null,c:null};
 const skinPage=$('skinPage'), skinBody=$('skinBody');
-const SKV={greed:shopV,shadow:shopV2,sun:shopV3,king:shopV4,gluttony:shopV5,mugen:shopV6,thunder:shopV7,ricc:shopV8};
-function skTileImg(c){const k=CSK.find(x=>x.char===c); const I=k&&SK_INFO[k.id]; return (I&&(I.cov||I.pv)&&(I.cov||I.pv)[0])||IMGS[TYPES[c].img]}
+const SKV={greed:shopV,shadow:shopV2,sun:shopV3,king:shopV4,gluttony:shopV5,mugen:shopV6,thunder:shopV7,ricc:shopV8,rafael:shopV9};
+function skTileImg(c){return IMGS[TYPES[c].img]}
 function renderSkinPage(){
   $('skinBack').textContent=(skNav.a||skNav.c)?'‹ ย้อนกลับ':'‹ กลับ';
   let h='';
@@ -4006,7 +4092,7 @@ function renderSkinPage(){
   skinBody.innerHTML=h;
   if(skNav.c){
     skinBody.querySelectorAll('.sk').forEach(c=>{const v=SKV[c.dataset.id]; if(v)c.querySelector('.covv').appendChild(v)});
-    [[shopV,TEA_VID],[shopV2,SH_VID],[shopV3,SUN_VID],[shopV4,KING_VID],[shopV5,'assets/gl_vid.mp4'],[shopV6,'assets/gojo_vid.mp4'],[shopV7,'assets/zen_sk_vid.mp4'],[shopV8,'assets/ricc_vid.mp4']].forEach(([v,src])=>{if(!v.src)v.src=src});
+    [[shopV,TEA_VID],[shopV2,SH_VID],[shopV3,SUN_VID],[shopV4,KING_VID],[shopV5,'assets/gl_vid.mp4'],[shopV6,'assets/gojo_vid.mp4'],[shopV7,'assets/zen_sk_vid.mp4'],[shopV8,'assets/ricc_vid.mp4'],[shopV9,'assets/rafael_vid.mp4']].forEach(([v,src])=>{if(!v.src)v.src=src});
     skinBody.querySelectorAll('video').forEach(v=>{try{const p=v.play(); if(p&&p.catch)p.catch(()=>{})}catch(e){}});
   }
 }
@@ -4031,7 +4117,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&skinPage.classList.
 /* ---------- profile & bag ---------- */
 const profPage=$('profPage'), bagPage=$('bagPage'), pfPick=$('pfPick'), pfBody=$('pfBody'), bagBody=$('bagBody');
 const pfV=document.createElement('video'); pfV.muted=true; pfV.loop=true; pfV.playsInline=true; pfV.setAttribute('playsinline',''); pfV.setAttribute('muted','');
-const SKIN_COVER={ricc:()=>['assets/ricc_vid.mp4','assets/ricc_poster.webp'],thunder:()=>['assets/zen_sk_vid.mp4','assets/zen_sk_poster.webp'],mugen:()=>['assets/gojo_vid.mp4','assets/gojo_poster.webp'],gluttony:()=>['assets/gl_vid.mp4','assets/gl_poster.webp'],greed:()=>[TEA_VID,TEA_POSTER],sun:()=>[SUN_VID,SUN_POSTER],shadow:()=>[SH_VID,SH_POSTER],king:()=>[KING_VID,KING_POSTER]};
+const SKIN_COVER={rafael:()=>['assets/rafael_vid.mp4','assets/rafael_poster.webp'],ricc:()=>['assets/ricc_vid.mp4','assets/ricc_poster.webp'],thunder:()=>['assets/zen_sk_vid.mp4','assets/zen_sk_poster.webp'],mugen:()=>['assets/gojo_vid.mp4','assets/gojo_poster.webp'],gluttony:()=>['assets/gl_vid.mp4','assets/gl_poster.webp'],greed:()=>[TEA_VID,TEA_POSTER],sun:()=>[SUN_VID,SUN_POSTER],shadow:()=>[SH_VID,SH_POSTER],king:()=>[KING_VID,KING_POSTER]};
 const SKIN_IMG={gluttony:()=>IMGS.sgl,greed:()=>IMGS.sinsub,sun:()=>IMGS.sun,shadow:()=>IMGS.sjin,king:()=>IMGS.king};
 const BOSS_TITLE={redwan:'ผู้พิชิตเรด วาน แอสเทียร์',sukuna:'ผู้พิชิตราชาแห่งคำสาป',kokushibo:'ผู้พิชิตจันทราชั้นสูง',mahoraga:'ผู้พิชิตเทพดาบ',aizen:'ผู้พิชิตเหนือปรัชญา'};
 const MYST=[
@@ -4541,7 +4627,7 @@ let rimDrops=[];
 /* ตอนเริ่มเกม: ริมุรุตั้งชื่อพันธมิตร 1 ตัว (สุ่ม) ถ้าไม่มีให้ตัวเอง */
 function rimStart(){
   for(const R of balls){
-    if(!R.alive||R.type!=='rimuru')continue;
+    if(!R.alive||R.type!=='rimuru'||R.skin==='rafael')continue;
     const allies=balls.filter(e=>e.alive&&e.team===R.team&&e!==R&&!e.helper&&!e.shadow&&!e.mini&&!e.boss);
     const T=allies.length?allies[Math.random()*allies.length|0]:R;
     T.rimDmg=1.3; T.rimHeal=0.3; T.max+=20; T.hp+=20;
