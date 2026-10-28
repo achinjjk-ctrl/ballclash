@@ -450,6 +450,25 @@ body.in-pick .row{margin-top:10px}
 .clsTag.cls-super{--c1:#c77a06;--c2:#ffd45e;--g:rgba(255,200,80,.6)}
 .clsTag.cls-weapon{--c1:#b8202c;--c2:#ff6a6a;--g:rgba(255,80,90,.6)}
 .clsTag.cls-none{--c1:#4a5260;--c2:#8a94a4;--g:rgba(150,160,175,.35)}
+.sss-badge{display:flex;justify-content:flex-start;align-items:flex-start;margin-top:6px;position:relative;z-index:6}
+.sss-stage{position:relative;flex:none;align-self:flex-start;width:min(110px,30vw);height:auto;aspect-ratio:1536/1024;overflow:hidden;isolation:isolate}
+.sss-base{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:1;animation:sss-aura 3s ease-in-out infinite}
+.sss-wing{position:absolute;z-index:2;width:19.08%;height:auto;top:8.79%;filter:drop-shadow(0 0 8px rgba(0,238,255,.6));will-change:transform}
+.sss-l{left:1.17%;transform-origin:100% 55%;animation:sss-flapL 2.7s ease-in-out infinite}
+.sss-r{right:1.1%;transform-origin:0% 55%;animation:sss-flapR 2.7s ease-in-out infinite}
+.sss-sweep{position:absolute;z-index:3;pointer-events:none;left:-25%;top:36%;width:150%;height:30%;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.1) 43%,rgba(255,255,255,.95) 49%,#00ffff 52%,#ff50ed 56%,rgba(255,210,80,.55) 59%,transparent 67%);mix-blend-mode:screen;filter:blur(2px);animation:sss-sweep 3s ease-in-out infinite;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 20%,#000 80%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 20%,#000 80%,transparent)}
+.sss-halo{position:absolute;z-index:0;inset:10% 4%;border-radius:50%;background:conic-gradient(#ff3ba8,#ffb52e,#42ffb5,#00cfff,#8d4dff,#ff3ba8);opacity:.25;filter:blur(35px);animation:sss-spin 8s linear infinite}
+.sss-star{position:absolute;z-index:4;left:var(--x);top:var(--y);width:var(--s);height:var(--s);border-radius:50%;background:#fff;opacity:0;pointer-events:none;box-shadow:0 0 6px #fff,0 0 14px #00eaff,0 0 22px #ff45e9;animation:sss-tw var(--d) ease-in-out var(--delay) infinite}
+.sss-star:before,.sss-star:after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:linear-gradient(transparent,#fff,transparent)}
+.sss-star:before{width:1.5px;height:calc(var(--s)*5)}
+.sss-star:after{width:calc(var(--s)*5);height:1.5px;background:linear-gradient(90deg,transparent,#fff,transparent)}
+@keyframes sss-flapL{0%,100%{transform:rotate(0deg) translateY(0)}50%{transform:rotate(-4deg) translateY(-3px)}}
+@keyframes sss-flapR{0%,100%{transform:rotate(0deg) translateY(0)}50%{transform:rotate(4deg) translateY(-3px)}}
+@keyframes sss-aura{0%,100%{filter:drop-shadow(0 0 7px rgba(0,238,255,.55)) drop-shadow(0 0 18px rgba(180,40,255,.45))}50%{filter:drop-shadow(0 0 13px rgba(255,53,230,.75)) drop-shadow(0 0 27px rgba(0,238,255,.65))}}
+@keyframes sss-sweep{0%{transform:translateX(-40%);opacity:0}15%{opacity:.9}60%{opacity:.75}100%{transform:translateX(40%);opacity:0}}
+@keyframes sss-tw{0%,100%{opacity:0;transform:scale(.25) rotate(0)}45%,60%{opacity:1;transform:scale(1.2) rotate(45deg)}}
+@keyframes sss-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.sss-wing,.sss-base,.sss-sweep,.sss-star,.sss-halo{animation-duration:10s!important}}
 </style>
 </head>
 <body>
@@ -4596,17 +4615,24 @@ function pfValidShow(sl){
   if(sl.s){const sk=CSK.find(x=>x.id===sl.s); if(!sk||sk.char!==sl.k||!cskOwned.includes(sl.s))return {k:sl.k,s:''}}
   return sl;
 }
+/* ฉายาฟรี: ป้ายแรงก์ SSS (ใช้ได้ทุกคนตอนนี้) */
+const SSS_TITLE='SSS Rank - Moving Wings', FREE_TITLES=[SSS_TITLE];
+function sssBadgeHTML(){
+  let st='';
+  for(let i=0;i<22;i++)st+='<i class="sss-star" style="--x:'+(2+Math.random()*96).toFixed(1)+'%;--y:'+(4+Math.random()*92).toFixed(1)+'%;--s:'+(2+Math.random()*3).toFixed(1)+'px;--d:'+(1.1+Math.random()*2.2).toFixed(2)+'s;--delay:'+(-Math.random()*3).toFixed(2)+'s"></i>';
+  return '<div class="sss-badge" role="img" aria-label="ป้ายแรงก์ SSS"><div class="sss-stage"><div class="sss-halo"></div><img class="sss-base" alt="" src="assets/sss_base.webp"><img class="sss-wing sss-l" alt="" src="assets/sss_wing_l.webp"><img class="sss-wing sss-r" alt="" src="assets/sss_wing_r.webp"><div class="sss-sweep"></div>'+st+'</div></div>';
+}
 function renderProfile(){
   updCoins(); updProfChip();
   const fav=cskOwned.includes(profile.fav)?CSK.find(x=>x.id===profile.fav):null;
   if(!fav)profile.fav='';
   const earned=Object.keys(BOSS_TITLE).filter(k=>bossWon.includes(k));
   let h='<div class="pfban"><div class="pfvh"></div><div class="pfg"></div>'+(fav?'':'<div class="pfnone">ยังไม่ได้ตั้งสกินโปรด · เลือกด้านล่างเพื่อแสดงคลิปหน้าปก</div>')+
-    '<div class="pfhead"><div class="pfbig">'+avHTML()+'</div><div class="pfid"><h3>'+esc(profile.name||'ผู้เล่น')+'</h3>'+(profile.title?'<small>'+esc(profile.title)+'</small>':'')+'</div></div></div>';
+    '<div class="pfhead"><div class="pfbig">'+avHTML()+'</div><div class="pfid"><h3>'+esc(profile.name||'ผู้เล่น')+'</h3>'+(profile.title===SSS_TITLE?sssBadgeHTML():(profile.title?'<small>'+esc(profile.title)+'</small>':''))+'</div></div></div>';
   h+='<div class="pfsec"><h4>ชื่อผู้เล่น</h4><input type="text" id="pfName" maxlength="16" value="'+esc(profile.name)+'" placeholder="ตั้งชื่อของคุณ"></div>';
   h+='<div class="pfsec"><h4>รูปโปรไฟล์</h4><div class="pfrow"><button class="btn alt" id="pfUp" type="button">เลือกรูปจากเครื่อง</button>'+(profile.avatar?'<button class="btn alt" id="pfDel" type="button">ลบรูป</button>':'')+'</div></div>';
   h+='<div class="pfsec"><h4>ฉายา</h4><input type="text" id="pfTitle" maxlength="24" value="'+esc(profile.title)+'" placeholder="เช่น เจ้าแห่งสนามบอล">'+
-    (earned.length?'<div class="pfchips">'+earned.map(k=>'<button type="button" data-title="'+esc(BOSS_TITLE[k])+'" class="'+(profile.title===BOSS_TITLE[k]?'on':'')+'">'+esc(BOSS_TITLE[k])+'</button>').join('')+'</div><small style="color:#9aa3ad">ฉายาที่ปลดล็อกจากการสังหารบอส กดเพื่อใช้</small>':'')+'</div>';
+    '<div class="pfchips">'+FREE_TITLES.map(t=>'<button type="button" data-title="'+esc(t)+'" class="'+(profile.title===t?'on':'')+'">'+esc(t)+'</button>').join('')+earned.map(k=>'<button type="button" data-title="'+esc(BOSS_TITLE[k])+'" class="'+(profile.title===BOSS_TITLE[k]?'on':'')+'">'+esc(BOSS_TITLE[k])+'</button>').join('')+'</div><small style="color:#9aa3ad">ฉายาฟรีและฉายาที่ปลดล็อกจากการสังหารบอส กดเพื่อใช้</small>'+'</div>';
   h+='<div class="pfsec"><h4>ตัวละครที่โชว์ (สูงสุด 3 ตัว)</h4><div class="pfsl3">'+[0,1,2].map(i=>{
     const sl=pfValidShow(profile.show[i]);
     if(!sl)return '<button class="pfsl empty" type="button" data-slot="'+i+'"><span class="plus">+</span><small>เลือกตัวละคร</small></button>';
