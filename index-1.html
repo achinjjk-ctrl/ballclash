@@ -289,8 +289,8 @@ button.btn.buy .gem{width:16px;height:16px;vertical-align:-3px}
 .skact .btn{flex:0 1 260px}
 .skact .need{font-size:13px;color:#ff8a96}
 
-#profPage,#bagPage,#mysPage,#gachaPage,#skinPage{position:fixed;inset:0;z-index:25;display:none;flex-direction:column;background:#07080d;overflow-y:auto;padding-top:env(safe-area-inset-top,0px);-webkit-overflow-scrolling:touch}
-#profPage.open,#bagPage.open,#mysPage.open,#gachaPage.open,#skinPage.open{display:flex}
+#profPage,#bagPage,#mysPage,#gachaPage,#collPage,#skinPage{position:fixed;inset:0;z-index:25;display:none;flex-direction:column;background:#07080d;overflow-y:auto;padding-top:env(safe-area-inset-top,0px);-webkit-overflow-scrolling:touch}
+#profPage.open,#bagPage.open,#mysPage.open,#gachaPage.open,#collPage.open,#skinPage.open{display:flex}
 .mcard{margin:0 16px;border:1px solid rgba(255,255,255,.18);border-left:3px solid #b07cff;background:rgba(14,16,22,.96);padding:14px;display:flex;flex-direction:column;gap:10px}
 .mcard .mh{display:flex;align-items:center;gap:12px}
 .mcard .mq{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle,#2a2147,#0b0c14);border:2px dashed #6b5aa8;display:grid;place-items:center;font-size:30px;font-weight:800;color:#8b7bd0;flex:none;overflow:hidden}
@@ -430,6 +430,26 @@ body.in-pick .row{margin-top:10px}
 .skChar small{font-size:11px;color:var(--dim);padding:0 6px 8px}
 .skNavTop{margin:4px 0 12px}
 .skNavTop h3{margin:0;font-size:18px;color:var(--ink)}
+.collFace{width:150px;height:150px;margin:0 auto 10px;border-radius:12px;overflow:hidden;border:1px solid #2a3140;display:flex;align-items:center;justify-content:center}
+.collFace img{width:100%;height:100%;object-fit:cover}
+.collFace.lock{font-size:48px;background:#111}
+.collDet{background:#0f1218;border:1px solid #2a3140;border-radius:10px;padding:14px;text-align:left;margin-top:8px}
+.collDet h3{margin:6px 0;text-align:center}
+.collSub{display:block;color:#9fb0c4;margin-top:4px}
+.collStat{margin:8px 0;color:#c9d2de;font-size:14px}
+.collDesc{line-height:1.6;color:#d3d8de;font-size:14px;margin:4px 0}
+.collSkins{padding-left:18px;font-size:14px;line-height:1.7}
+.collSkins .own{color:#8dffb0}
+.collTile.lock{opacity:.5}
+.clsRow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:6px 0}
+.clsTag{--c1:#555;--c2:#888;--g:rgba(140,140,140,.4);display:inline-block;padding:3px 11px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.03em;color:#fff;background:linear-gradient(90deg,var(--c1),var(--c2));border:1px solid rgba(255,255,255,.4);box-shadow:0 0 10px var(--g),inset 0 0 6px rgba(255,255,255,.25);text-shadow:0 1px 2px rgba(0,0,0,.6);white-space:nowrap}
+.clsTag::before{content:'✦ ';font-size:10px;opacity:.9}
+.clsTag.cls-tank{--c1:#2f6fd0;--c2:#86b8ff;--g:rgba(79,140,255,.55)}
+.clsTag.cls-mage{--c1:#6b2fd6;--c2:#c08bff;--g:rgba(178,116,255,.6)}
+.clsTag.cls-sword{--c1:#0a8f86;--c2:#5fe6d6;--g:rgba(60,220,200,.55)}
+.clsTag.cls-super{--c1:#c77a06;--c2:#ffd45e;--g:rgba(255,200,80,.6)}
+.clsTag.cls-weapon{--c1:#b8202c;--c2:#ff6a6a;--g:rgba(255,80,90,.6)}
+.clsTag.cls-none{--c1:#4a5260;--c2:#8a94a4;--g:rgba(150,160,175,.35)}
 </style>
 </head>
 <body>
@@ -444,13 +464,22 @@ body.in-pick .row{margin-top:10px}
     <span class="l2">สงครามบอลอนิเมะ</span>
     <div class="l3">ปล่อยบอล ให้มันชนกันเอง</div>
   </div>
-  <div class="mlist" role="menu">
-    <button class="mi on" role="menuitem" data-m="1v1" data-d="ลงสนามทีละ 1 ลูก ใครแพ้เสียหัวใจ 1 ดวงแล้วลงลูกต่อไป ผู้ชนะคงเลือดเดิม · มีโหมดย่อยทดสอบตัวละครให้เลือกในหน้าเลือกตัว"><span class="mtxt"><b>1V1</b><i>ปล่อยทีละลูก</i></span><span class="badge">›</span></button>
-    <button class="mi" role="menuitem" data-m="3v3" data-d="ปล่อยบอลทั้ง 3 ลูกออกจากจุดเดียว แล้วแยกกันกลิ้งออกไป"><span class="mtxt"><b>3V3</b><i>ปล่อยพร้อมกัน</i></span><span class="badge">›</span></button>
+  <div class="mlist" id="mlMain" role="menu">
+    <button class="mi on" role="menuitem" data-m="game" data-d="โหมดเกม: เลือกเล่นแบบ PVE (3V3 หรือ 1V1) หรือโหมดตีบอส"><span class="mtxt"><b>โหมดเกม</b><i>PVE · โหมดตีบอส</i></span><span class="badge">›</span></button>
+    <button class="mi" role="menuitem" data-m="coll" data-d="คอลเลคชั่นตัวละครคลาสสิคทั้งหมดแยกตามคลาส ดูความสามารถ สกิน และเรื่องที่มาของแต่ละตัว"><span class="mtxt"><b>คอลเลคชั่น</b><i>ตัวละครคลาสสิคทั้งหมด</i></span><span class="badge">›</span></button>
     <button class="mi" role="menuitem" data-m="shop" data-d="ร้านค้าเต็มจอ ตัวละครลึกลับ ตู้เนื้อเรื่อง และสกินลูกบอล"><span class="mtxt"><b>ร้านค้า</b><i>ตัวละครลึกลับ · ตู้เนื้อเรื่อง</i></span><span class="badge">›</span></button>
     <button class="mi" role="menuitem" data-m="skin" data-d="สกินตัวละครแยกตามอนิเมะ ทั้งรูปลักษณ์และสกิล แยกจากร้านค้า"><span class="mtxt"><b>สกิน</b><i>สกินตัวละครแยกตามอนิเมะ</i></span><span class="badge">›</span></button>
-    <button class="mi" role="menuitem" data-m="boss" data-d="ร่วมมือ 3 ลูกสู้บอส เลือกได้ระหว่างสุคุนะ โคคุชิโบ มโหราฬ และไอเซ็น (เลื่อนเลือกบอสได้) บอสยืนนิ่งไม่มีดาเมจชน ใช้สกิลสุดโหด ชนะรับเหรียญก้อนใหญ่และเพชร"><span class="mtxt"><b>โหมดตีบอส</b><i>สุคุนะ</i></span><span class="badge">›</span></button>
     <button class="mi" role="menuitem" data-m="bag" data-d="กระเป๋าเก็บไอเทมที่ได้จากบอส (ตอนนี้ยังไม่มีไอเทมให้เก็บ)"><span class="mtxt"><b>กระเป๋า</b><i>ไอเทมจากบอส</i></span><span class="badge">›</span></button>
+  </div>
+  <div class="mlist" id="mlGame" role="menu" style="display:none">
+    <button class="mi" role="menuitem" data-m="pve" data-d="โหมด PvE: เลือกระหว่าง 3V3 (ปล่อยพร้อมกัน) และ 1V1 (ปล่อยทีละลูก)"><span class="mtxt"><b>1. PVE</b><i>3V3 หรือ 1V1</i></span><span class="badge">›</span></button>
+    <button class="mi" role="menuitem" data-m="boss" data-d="ร่วมมือ 3 ลูกสู้บอส เลือกได้ระหว่างสุคุนะ โคคุชิโบ มโหราฬ และไอเซ็น (เลื่อนเลือกบอสได้) บอสยืนนิ่งไม่มีดาเมจชน ใช้สกิลสุดโหด ชนะรับเหรียญก้อนใหญ่และเพชร"><span class="mtxt"><b>2. Boss</b><i>สุคุนะ</i></span><span class="badge">›</span></button>
+    <button class="mi" role="menuitem" data-m="back" data-to="mlMain" data-d="กลับไปเมนูหลัก"><span class="mtxt"><b>‹ กลับ</b><i>เมนูหลัก</i></span><span class="badge">‹</span></button>
+  </div>
+  <div class="mlist" id="mlPve" role="menu" style="display:none">
+    <button class="mi" role="menuitem" data-m="3v3" data-d="ปล่อยบอลทั้ง 3 ลูกออกจากจุดเดียว แล้วแยกกันกลิ้งออกไป"><span class="mtxt"><b>3V3</b><i>ปล่อยพร้อมกัน</i></span><span class="badge">›</span></button>
+    <button class="mi" role="menuitem" data-m="1v1" data-d="ลงสนามทีละ 1 ลูก ใครแพ้เสียหัวใจ 1 ดวงแล้วลงลูกต่อไป ผู้ชนะคงเลือดเดิม · มีโหมดย่อยทดสอบตัวละครให้เลือกในหน้าเลือกตัว"><span class="mtxt"><b>1V1</b><i>ปล่อยทีละลูก</i></span><span class="badge">›</span></button>
+    <button class="mi" role="menuitem" data-m="back" data-to="mlGame" data-d="กลับไปโหมดเกม"><span class="mtxt"><b>‹ กลับ</b><i>โหมดเกม</i></span><span class="badge">‹</span></button>
   </div>
   <div class="mdesc" id="mdesc"></div>
   <div class="mfoot"><span><kbd>↑</kbd><kbd>↓</kbd>เลือก</span><span><kbd>Enter</kbd>เริ่มเกม</span></div>
@@ -477,6 +506,10 @@ body.in-pick .row{margin-top:10px}
 <section id="mysPage" class="pgx" aria-label="ตัวละครลึกลับ">
   <div class="shtop"><button class="codebtn" id="mysBack" type="button">‹ กลับ</button><h2>ตัวละครลึกลับ</h2><div class="coinchip" id="coinsMys"></div></div>
   <div class="pfbody" id="mysBody"></div>
+</section>
+<section id="collPage" class="pgx" aria-label="คอลเลคชั่นตัวละคร">
+  <div class="shtop"><button class="codebtn" id="collBack" type="button">‹ กลับ</button><h2>คอลเลคชั่นตัวละคร</h2></div>
+  <div class="pfbody" id="collBody"></div>
 </section>
 <section id="gachaPage" class="pgx" aria-label="ตู้ JJK">
   <div class="shtop"><button class="codebtn" id="gachaBack" type="button">‹ กลับ</button><h2 id="gachaH">ตู้ JJK</h2><div class="coinchip" id="coinsGacha"></div></div>
@@ -3287,7 +3320,7 @@ function renderPanel(){
     if(bh)h+='<div class="stslide"><div class="pkBuf">'+bh+'</div></div>';
     h+='</div>'+(slides>1?'<div class="sdots">'+Array.from({length:slides},(_,q)=>'<i'+(q===pickPg?' class="on"':'')+'></i>').join('')+'</div>':'');
     let inf;
-    if(focusK){const t=TYPES[focusK]; inf='<div class="pkName">'+t.name+(isLocked(focusK)?' <span class="pkLock">🔒 ปลดล็อก '+(PGEM[focusK]?PGEM[focusK]+' เพชร':PRICE[focusK]+' เหรียญ')+'</span>':'')+'</div><div class="pkStat">HP '+t.hp+' · แรง '+t.atk+'</div><div class="pkDesc">'+t.desc+'</div>'}
+    if(focusK){const t=TYPES[focusK]; inf='<div class="pkName">'+t.name+(isLocked(focusK)?' <span class="pkLock">🔒 ปลดล็อก '+(PGEM[focusK]?PGEM[focusK]+' เพชร':PRICE[focusK]+' เหรียญ')+'</span>':'')+'</div><div class="clsRow">'+clsBadges(focusK)+'</div><div class="pkStat">HP '+t.hp+' · แรง '+t.atk+'</div><div class="pkDesc">'+t.desc+'</div>'}
     else inf='<div class="pkDesc">บอลตายลูกไหน เสียหัวใจ 1 ดวง หัวใจหมดคือแพ้'+(mode==='1v1'?' · 1V1 ลงสนามตามลำดับที่เลือก':'')+'</div>';
     h+='<div id="info" class="pkInfo">'+inf;
     if(focusK&&isLocked(focusK)){const gem=!!PGEM[focusK], pr=gem?PGEM[focusK]:PRICE[focusK], ok=(gem?gems:coins)>=pr; h+='<div class="row"><button class="btn buy'+(gem?' g':'')+'" id="buy"'+(ok?'':' disabled')+'>ปลดล็อก '+(gem?gemSVG:coinSVG)+pr+(ok?'':' · '+(gem?'เพชร':'เหรียญ')+'ไม่พอ')+'</button></div>'}
@@ -4497,7 +4530,7 @@ function renderSkinPage(){
     }).join('')+'</div></div>';
   }else{
     const an=ANIME.find(x=>x.id===skNav.a);
-    h='<div class="skBody"><div class="skNavTop"><h3>'+TYPES[skNav.c].name+' · '+an.name+'</h3><small>สกินของตัวละคร</small></div>'+CSK.filter(k=>k.char===skNav.c).map(skCard).join('')+'</div>';
+    h='<div class="skBody"><div class="skNavTop"><h3>'+TYPES[skNav.c].name+' · '+an.name+'</h3><small>สกินของตัวละคร</small><div class="clsRow">'+clsBadges(skNav.c)+'</div></div>'+CSK.filter(k=>k.char===skNav.c).map(skCard).join('')+'</div>';
   }
   skinBody.innerHTML=h;
   if(skNav.c){
@@ -4649,26 +4682,85 @@ $('shopSkin').addEventListener('click',openSkins);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(pfPick.classList.contains('open'))closePk(); else if(profPage.classList.contains('open'))closeProfile(); else if(bagPage.classList.contains('open'))closeBag(); else if(mysPage.classList.contains('open'))closeMys()}});
 updProfChip();
 
+/* ================= คอลเลคชั่นตัวละครคลาสสิค ================= */
+const CLASSES=[
+  {id:'tank',name:'คลาสแทงค์',chars:['glut','invinc','yuji']},
+  {id:'mage',name:'คลาสนักเวทย์',chars:['emilia','dio','hak','gojo','jin','naoya','rimuru']},
+  {id:'sword',name:'คลาสนักดาบ',chars:['tanjiro','giyuu','toji','zen']},
+  {id:'super',name:'คลาสเหนือธรรมชาติ',chars:['kira','subaru','shin','wk']},
+  {id:'weapon',name:'คลาสอาวุธร้ายแรง',chars:['toji','rick','ell','eren']},
+  {id:'none',name:'ยังไม่จัดคลาส',chars:['spider']}
+];
+const collBody=$('collBody'), collPage=$('collPage');
+let collCls=null, collCh=null;
+function clsBadges(k){return CLASSES.filter(c=>c.chars.includes(k)).map(c=>'<span class="clsTag cls-'+c.id+'">'+esc(c.name)+'</span>').join('')}
+function collClassOf(k){return CLASSES.filter(c=>c.chars.includes(k)).map(c=>c.name)}
+function collAnimeOf(k){return ANIME.filter(a=>a.chars.includes(k)).map(a=>a.name)}
+function collRender(){
+  let h='';
+  if(collCh){
+    const k=collCh, t=TYPES[k], ok=unlocked.includes(k), skins=CSK.filter(x=>x.char===k);
+    h+='<div class="collDet"><div class="collFace'+(ok?'':' lock')+'">'+(ok?pfFaceHTML(k,''):'<span class="em">🔒</span>')+'</div>'+
+      '<h3>'+esc(t.name)+'</h3>'+
+      '<div class="clsRow">'+clsBadges(k)+'</div>'+
+      '<small class="collSub">'+(collAnimeOf(k).length?'เรื่อง: '+esc(collAnimeOf(k).join(' · ')):'ยังไม่ระบุเรื่อง')+(ok?'':' · ยังไม่ปลดล็อก')+'</small>'+
+      '<div class="collStat">HP '+t.hp+' · ดาเมจชน '+t.atk+'</div>'+
+      '<h4>ความสามารถ</h4><p class="collDesc">'+esc(t.desc||'-')+'</p>'+
+      '<h4>สกิน</h4>'+(skins.length?'<ul class="collSkins">'+skins.map(x=>'<li>'+esc(x.name)+' · '+(cskOwned.includes(x.id)?'<b class="own">ครอบครองแล้ว</b>':(x.cur==='gem'?'ราคา '+x.price+' เพชร':'ราคา '+x.price+' เหรียญ'))+'</li>').join('')+'</ul>':'<p class="collDesc">ไม่มีสกิน</p>')+
+      '</div><button class="btn" type="button" data-back="1">‹ กลับ</button>';
+  }else if(collCls){
+    const C=CLASSES.find(c=>c.id===collCls);
+    h+='<div class="skNavTop"><h3>'+esc(C.name)+'</h3><small>'+C.chars.length+' ตัวละคร</small></div><div class="skChGrid">'+
+      C.chars.map(k=>{const ok=unlocked.includes(k), n=CSK.filter(x=>x.char===k).length;
+        return '<button type="button" class="skChar collTile'+(ok?'':' lock')+'" data-ch="'+k+'"><div class="pimg">'+(ok?pfFaceHTML(k,''):'<span class="em">🔒</span>')+'</div><b>'+esc(TYPES[k].name)+'</b><small>'+n+' สกิน'+(ok?'':' · ล็อก')+'</small></button>'}).join('')+'</div>'+
+      '<button class="btn" type="button" data-back="1" style="margin-top:12px">‹ กลับ</button>';
+  }else{
+    h+='<div class="skNavTop"><h3>เลือกคลาส</h3><small>ตัวละครคลาสสิคทั้งหมด</small></div>'+
+      CLASSES.map(C=>{const ok=C.chars.filter(k=>unlocked.includes(k)).length;
+        return '<div class="stcard collCls" data-cls="'+C.id+'"><div class="sc-ic">🏷️</div><div><h3>'+esc(C.name)+'</h3><p>'+C.chars.length+' ตัวละคร · ปลดล็อกแล้ว '+ok+'</p></div><button class="btn" type="button" data-cls="'+C.id+'">เปิด</button></div>'}).join('');
+  }
+  collBody.innerHTML='<div class="skBody">'+h+'</div>';
+}
+function openColl(){collCls=null; collCh=null; collRender(); collPage.classList.add('open'); collPage.scrollTop=0}
+function closeColl(){collPage.classList.remove('open')}
+collBody.addEventListener('click',e=>{
+  const bk=e.target.closest('[data-back]'); if(bk){ if(collCh)collCh=null; else collCls=null; collRender(); collBody.parentNode.scrollTop=0; return }
+  const c=e.target.closest('[data-ch]'); if(c){collCh=c.dataset.ch; collRender(); collPage.scrollTop=0; return}
+  const k=e.target.closest('[data-cls]'); if(k){collCls=k.dataset.cls; collCh=null; collRender(); collPage.scrollTop=0}
+});
+$('collBack').addEventListener('click',()=>{ if(collCh||collCls){ if(collCh)collCh=null; else collCls=null; collRender(); collPage.scrollTop=0 } else closeColl() });
+
 /* ---------- main menu (COD-style) ---------- */
-const menuItems=[...document.querySelectorAll('#mainMenu .mi')], mdesc=$('mdesc'); let mIdx=0;
+let menuItems=[], mdesc=$('mdesc'), mIdx=0;
 function setItem(i){
+  if(!menuItems.length)return;
   mIdx=(i+menuItems.length)%menuItems.length;
   menuItems.forEach((el,j)=>el.classList.toggle('on',j===mIdx));
   mdesc.textContent=menuItems[mIdx].dataset.d;
 }
-menuItems.forEach((el,i)=>{
-  el.addEventListener('mouseenter',()=>setItem(i));
-  el.addEventListener('focus',()=>setItem(i));
+function showMenu(id){
+  for(const g of document.querySelectorAll('#mainMenu .mlist')) g.style.display=g.id===id?'':'none';
+  menuItems=[...document.querySelectorAll('#'+id+' .mi')]; setItem(0);
+}
+showMenu('mlMain');
+document.querySelectorAll('#mainMenu .mi').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{const j=menuItems.indexOf(el); if(j>=0)setItem(j)});
+  el.addEventListener('focus',()=>{const j=menuItems.indexOf(el); if(j>=0)setItem(j)});
   el.addEventListener('click',()=>{
     if(phase!=='menu')return;
-    if(el.dataset.m==='bag'){openBag();return}
-    if(el.dataset.m==='shop'){openShop();return}
-    if(el.dataset.m==='skin'){openSkinPage();return}
+    const m=el.dataset.m;
+    if(m==='back'){showMenu(el.dataset.to); return}
+    if(m==='game'){showMenu('mlGame'); return}
+    if(m==='pve'){showMenu('mlPve'); return}
+    if(m==='bag'){openBag();return}
+    if(m==='coll'){openColl();return}
+    if(m==='shop'){openShop();return}
+    if(m==='skin'){openSkinPage();return}
     if(el.classList.contains('soon')){el.classList.remove('nope'); void el.offsetWidth; el.classList.add('nope'); return}
-    mode=el.dataset.m; startPick()});
+    mode=m; startPick()});
 });
 document.addEventListener('keydown',e=>{
-  if(phase!=='menu'||codeModal.classList.contains('open')||skinModal.classList.contains('open')||shopPage.classList.contains('open')||skinPage.classList.contains('open')||profPage.classList.contains('open')||bagPage.classList.contains('open')||mysPage.classList.contains('open'))return;
+  if(phase!=='menu'||codeModal.classList.contains('open')||skinModal.classList.contains('open')||shopPage.classList.contains('open')||skinPage.classList.contains('open')||profPage.classList.contains('open')||bagPage.classList.contains('open')||mysPage.classList.contains('open')||collPage.classList.contains('open'))return;
   if(e.key==='ArrowDown'||e.key==='ArrowRight'){setItem(mIdx+1);e.preventDefault()}
   else if(e.key==='ArrowUp'||e.key==='ArrowLeft'){setItem(mIdx-1);e.preventDefault()}
   else if((e.key==='Enter'||e.key===' ')&&document.activeElement!==menuItems[mIdx]){menuItems[mIdx].click();e.preventDefault()}
